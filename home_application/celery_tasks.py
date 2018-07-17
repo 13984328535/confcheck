@@ -24,6 +24,7 @@ from home_application.models import APPConfig, APPChange, APPChangeRel
 from django.core.cache import cache
 from blueking.component.shortcuts import get_client_by_request,get_client_by_user
 from doctest import script_from_examples
+import os,base64,copy,datetime,re,json
 #apps=[]
 #task-work
 @task()
