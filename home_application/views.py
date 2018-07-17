@@ -20,6 +20,7 @@ from home_application.models import APPChangeRel
 import os,base64,copy,datetime,re,json
 from django.core import serializers
 from common.log import logger
+from django.core.cache import cache
 import time
 
 
@@ -410,6 +411,9 @@ def doModifyAPPConfig(request):
         appCfg.app_status=app_status
     appCfg.save()
     load_apps_config_cache()
+    apps = cache.__getattr__("V_CACHE_APPS")
+    print apps
+    
     return render_json({'code':True, 'text':"数据更新成功"})
 
 def doDelAPPConfig(request):
@@ -429,8 +433,9 @@ def doDelAPPConfig(request):
 
 def load_apps_config_cache():
     apps = APPConfig.objects.all()
-    cache.__delattr__("V_CACHE_APPS")
+    #cache.__delattr__("V_CACHE_APPS")
     cache.__setattr__("V_CACHE_APPS", apps)
+    
 
 def getPagingAPPConfigList(rq):
     try:
@@ -790,112 +795,43 @@ def exec_task_test(rq):
 def get_exec_task_test_result(rq):
     client = get_client_by_user(rq.user.username)
     dicts = APPChange.objects.filter(is_get_task_exe_result=0)
-    if dicts != None and len(dicts) > 0:
-        for obj in dicts:
-            task_instance_id = int(obj.task_id)
-            app_id = int(obj.app_id)
-            kwargs = {
-                "task_instance_id": task_instance_id
-            }
-            currTime = datetime.datetime.now()
-            checkTime = obj.check_time
-            if (currTime - checkTime).seconds > 120: #校验120秒后去获取结果
-                result = client.job.get_task_ip_log(kwargs)
-                ipLogContent = result.get('data')[0].get('stepAnalyseResult')[0].get('ipLogContent')[0]
-                """
-                dict: {u'totalTime': 1.190999984741211, u'isJobIp': 1, u'endTime': u'2018-07-13 17:29:49', 
-                 u'stepInstanceId': 1, u'ip': u'192.168.1.164', u'displayIp': u'', u'errCode': 0, u'source': 0, u'logContent': 
-                 u'[2018-07-13 17:29:49][PID:7252] job_start\nfile_md5=76b825a4b0d53119aae5344741e25179\n', 
-                 u'status': 9, u'startTime': u'2018-07-13 17:29:48', u'retryCount': 0, u'tag': u'', u'exitCode': 0}
-                """
-                exitCode = ipLogContent.get('exitCode')
-            
-                if exitCode == 1:#参数不全
-                    #APPChange.objects.filter(task_id=task_instance_id).update(check_result="调用脚本参数不全",is_get_task_exe_result=1)  
-                    APPChange.objects.filter(task_id=task_instance_id).delete()
-                    APPConfig.objects.filter(id=app_id).update(check_time=ipLogContent.get('startTime')
-                                                               ,check_result="调用脚本参数不全")
-                    chg_rel = APPChangeRel.objects.filter(app_id=app_id,change_file=obj.change_file)
-                    if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
-                        chg_rel[0].task_id=task_instance_id
-                        chg_rel[0].check_time=ipLogContent.get('startTime')
-                        chg_rel[0].check_result="调用脚本参数不全"
-                        chg_rel[0].save()
-                    return render_json({'code':True, 'text':"提取结果成功，调用脚本参数不全"})
-                elif exitCode == 2:#校验配置文件不存在
-                    #APPChange.objects.filter(task_id=task_instance_id).update(check_result="调用脚本参数不全",is_get_task_exe_result=1)
-                    APPChange.objects.filter(task_id=task_instance_id).delete()
-                    APPConfig.objects.filter(id=app_id).update(check_time=ipLogContent.get('startTime')
-                                                               ,check_result="校验配置文件不存在")
-                    chg_rel = APPChangeRel.objects.filter(app_id=app_id,change_file=obj.change_file)
-                    if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
-                        chg_rel[0].task_id=task_instance_id
-                        chg_rel[0].check_time=ipLogContent.get('startTime')
-                        chg_rel[0].check_result="校验配置文件不存在"
-                        chg_rel[0].save()
-                    return render_json({'code':True, 'text':"提取结果成功，校验配置文件不存在"})
-                elif exitCode == 3:#文件未发生变化
-                    #APPChange.objects.filter(task_id=task_instance_id).update(check_result="文件未发生变化",is_get_task_exe_result=1)
-                    APPChange.objects.filter(task_id=task_instance_id).delete()
-                    APPConfig.objects.filter(id=app_id).update(check_time=ipLogContent.get('startTime')
-                                                               ,check_result="文件未发生变化")
-                    chg_rel = APPChangeRel.objects.filter(app_id=app_id,change_file=obj.change_file)
-                    if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
-                        chg_rel[0].task_id=task_instance_id
-                        chg_rel[0].check_time=ipLogContent.get('startTime')
-                        chg_rel[0].check_result="文件未发生变化"
-                        chg_rel[0].save()
-                    return render_json({'code':True, 'text':"提取结果成功，文件未发生变化"})  
-                elif exitCode == 0:#拷贝成功
-                    checkContent = ipLogContent.get('logContent') 
-                    file_md5 = re.findall("file_md5=\w+", checkContent)[0].split("=")[1]
-                    APPConfig.objects.filter(id=app_id).update(check_time=ipLogContent.get('startTime')
-                                                               ,check_result="文件发生变化，并备份成功")
-                    chg_rel = APPChangeRel.objects.filter(app_id=app_id,change_file=obj.change_file)
-                    if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
-                        chg_rel[0].bak_time=ipLogContent.get('startTime')
-                        chg_rel[0].bak_path=obj.bak_path
-                        chg_rel[0].file_md5=file_md5
-                        chg_rel[0].task_id=task_instance_id
-                        chg_rel[0].check_time=ipLogContent.get('startTime')
-                        chg_rel[0].check_result="文件发生变化，并备份成功"
-                        chg_rel[0].save()
-                    else:#文件未存在备份记录
-                        APPChangeRel.objects.create(app_id=app_id,change_file=obj.change_file
-                                                    ,bak_time=ipLogContent.get('startTime')
-                                                    ,bak_path=obj.bak_path,task_id=task_instance_id
-                                                    ,file_md5=file_md5,check_time=ipLogContent.get('startTime')
-                                                    ,check_result="文件发生变化，并备份成功")
-                    #更新变更表
-                    APPChange.objects.filter(task_id=task_instance_id).update(check_result="文件发生变化，并备份成功"
-                                                                              ,is_get_task_exe_result=1
-                                                                              ,bak_time=ipLogContent.get('startTime')
-                                                                              ,bak_result="成功"
-                                                                              ,bak_path=obj.bak_path)
-                    
-                    return render_json({'code':True, 'text':"提取结果成功，拷贝成功"})     
-                else:#文件发生变化，备份异常失败,保留该task
-                    chg_rel = APPChangeRel.objects.filter(app_id=app_id,change_file=obj.change_file)
-                    if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
-                        app_last_bak_time=chg_rel[0].bak_time
-                    APPChange.objects.filter(task_id=task_instance_id).update(check_result="文件发生变化，备份未成功"
-                                                                                  ,check_time=ipLogContent.get('startTime')
-                                                                                  ,is_get_task_exe_result=1
-                                                                                  ,bak_result="失败"
-                                                                                  ,app_last_bak_time=app_last_bak_time) 
-                    return render_json({'code':True, 'text':"提取结果成功，文件发生变化，备份异常失败"})      
-                    #startTime = datetime.datetime.strptime(ipLogContent.get('startTime') , "%Y-%m-%dT%H:%M:%S") 
-                    
-                    """
-                    unicode: [2018-07-13 17:29:49][PID:7252] job_start
-                    file_md5=76b825a4b0d53119aae5344741e25179
-                    """ 
-                    #logsize = re.findall("logsize=\d+", logContent)[0].split("=")[1];  
-                    #RollLog.objects.filter(id=log.id).update(scan_log_size=logsize,do_result=exitCode,do_time=now,is_get_result=1)
-
-            else:
-                return render_json({'code':True, 'text':"未到提取结果时间"})        
-
+    #if dicts == None and len(dicts) <= 0:
+        #for obj in dicts:
+    task_instance_id = int(rq.POST.get("task_instance_id"))
+    #app_id = int(obj.app_id)
+    kwargs = {
+        "task_instance_id": task_instance_id
+    }
+    currTime = datetime.datetime.now()
+    #checkTime = obj.check_time
+    #if (currTime - checkTime).seconds > 1: #校验1秒后去获取结果
+    result = client.job.get_task_ip_log(kwargs)
+    ipLogContent = result.get('data')[0].get('stepAnalyseResult')[0].get('ipLogContent')[0]
+    """
+    dict: {u'totalTime': 1.190999984741211, u'isJobIp': 1, u'endTime': u'2018-07-13 17:29:49', 
+     u'stepInstanceId': 1, u'ip': u'192.168.1.164', u'displayIp': u'', u'errCode': 0, u'source': 0, u'logContent': 
+     u'[2018-07-13 17:29:49][PID:7252] job_start\nfile_md5=76b825a4b0d53119aae5344741e25179\n', 
+     u'status': 9, u'startTime': u'2018-07-13 17:29:48', u'retryCount': 0, u'tag': u'', u'exitCode': 0}
+     
+     dict: {u'totalTime': 0, u'isJobIp': 1, u'endTime': u'', u'stepInstanceId': 201, u'ip': u'192.168.1.164', 
+     u'displayIp': u'', u'errCode': 0, u'source': 0, u'logContent': u'', u'status': 7, u'startTime': u'2018-07-17 22:
+     09:02', u'retryCount': 0, u'tag': u'', u'exitCode': 0}
+     
+     dict: {u'totalTime': 0.6259999871253967, u'isJobIp': 1, u'endTime': u'2018-07-17 22:10:01', 
+ u'stepInstanceId': 202, u'ip': u'192.168.1.164', u'displayIp': u'', u'errCode': 0, u'source': 0, u'logContent': 
+ u'[2018-07-17 22:10:01][PID:10498] job_start\nfile_md5=76b825a4b0d53119aae5344741e25179\n', 
+ u'status': 104, u'startTime': u'2018-07-17 22:10:00', u'retryCount': 0, u'tag': u'', u'exitCode': 3}
+ 
+ dict: {u'totalTime': 1.1030000448226929, u'isJobIp': 1, u'endTime': u'2018-07-17 22:11:02', 
+ u'stepInstanceId': 203, u'ip': u'192.168.1.164', u'displayIp': u'', u'errCode': 0, u'source': 0, u'logContent': 
+ u'[2018-07-17 22:11:02][PID:15573] job_start\nfile_md5=76b825a4b0d53119aae5344741e25179\n', 
+ u'status': 104, u'startTime': u'2018-07-17 22:11:01', u'retryCount': 0, u'tag': u'', u'exitCode': 3}
+    """
+    
+    exitCode = ipLogContent.get('exitCode')
+    logmsg =  "The length of  is %d" % (exitCode)
+    logger.info(logmsg)
+    return render_json({'code':True, 'text':"校验成功"})
 
 def redExecFile(file_name):
     staticdir = ','.join(STATICFILES_DIRS);
