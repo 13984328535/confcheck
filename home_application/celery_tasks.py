@@ -66,7 +66,7 @@ def exec_app_check_task():
     #execute_task()
     apps = APPConfig.objects.all()
     #apps = cache.__getattr__("V_CACHE_APPS")
-    logger.info(u"加载应用配置缓存数据成功,数据记录数："+len(apps)+u"{}".format(now))
+    logger.info(u"加载应用配置缓存数据成功,数据记录数：{}".format(now))
     if apps == None or len(apps) <= 0:
         logger.error(u"缓存无数据，从数据库加载数据：{}".format(now))
         apps = APPConfig.objects.all()
