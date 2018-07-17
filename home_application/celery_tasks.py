@@ -22,7 +22,7 @@ from celery.task import periodic_task
 from common.log import logger
 from home_application.models import APPConfig, APPChange, APPChangeRel
 from django.core.cache import cache
-apps=[]
+#apps=[]
 #task-work
 @task()
 def async_task_load_app_config():
