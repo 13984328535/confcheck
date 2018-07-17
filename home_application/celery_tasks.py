@@ -288,8 +288,7 @@ def load_app_check_result_task():
                                                          ,bak_result=u"成功"\
                                                          ,bak_path=obj.bak_path\
                                                          ,check_result=u"文件发生变化，并备份成功"\
-                                                         ,check_time=cfg_task[0].check_time\
-                                                         ,is_get_task_exe_result=int(is_get_task_exe_result))
+                                                         ,check_time=cfg_task[0].check_time)
                                 APPChangeTask.objects.filter(task_id=task_instance_id).delete()#不保存已知类型错误或成功
                             chg_rel[0].bak_time=ipLogContent.get('startTime')
                             chg_rel[0].bak_path=obj.bak_path
