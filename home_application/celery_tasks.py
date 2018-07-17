@@ -223,105 +223,101 @@ def load_app_check_result_task():
             }
             currTime = datetime.datetime.now()
             checkTime = obj.check_time
-            if (currTime - checkTime).seconds > 100: #校验120秒后去获取结果
-                result = client.job.get_task_ip_log(kwargs)
-                ipLogContent = result.get('data')[0].get('stepAnalyseResult')[0].get('ipLogContent')[0]
-                exitCode = ipLogContent.get('exitCode')
-                logger.error(u"获取结果成功：{}".format(datetime.datetime.now()))
-                #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u", 当前时间：{}".format(now))
-                if exitCode == 1:#参数不全
-                    #APPChange.objects.filter(task_id=task_instance_id).update(check_result="调用脚本参数不全",is_get_task_exe_result=1)  
-                    APPChange.objects.filter(task_id=task_instance_id).delete()
-                    APPConfig.objects.filter(id=app_id).update(check_time=ipLogContent.get('startTime')
-                                                               ,check_result="调用脚本参数不全")
-                    chg_rel = APPChangeRel.objects.filter(app_id=app_id,change_file=obj.change_file)
-                    if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
-                        chg_rel[0].task_id=task_instance_id
-                        chg_rel[0].check_time=ipLogContent.get('startTime')
-                        chg_rel[0].check_result="调用脚本参数不全"
-                        chg_rel[0].save()
-                    logger.error(u"获取结果成功,调用脚本参数不全：{}".format(datetime.datetime.now()))
-                    #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 调用脚本参数不全, 当前时间：{}".format(now))
-                    #return render_json({'code':True, 'text':"提取结果成功，调用脚本参数不全"})
-                elif exitCode == 2:#校验配置文件不存在
-                    #APPChange.objects.filter(task_id=task_instance_id).update(check_result="调用脚本参数不全",is_get_task_exe_result=1)
-                    APPChange.objects.filter(task_id=task_instance_id).delete()
-                    APPConfig.objects.filter(id=app_id).update(check_time=ipLogContent.get('startTime')
-                                                               ,check_result="校验配置文件不存在")
-                    chg_rel = APPChangeRel.objects.filter(app_id=app_id,change_file=obj.change_file)
-                    if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
-                        chg_rel[0].task_id=task_instance_id
-                        chg_rel[0].check_time=ipLogContent.get('startTime')
-                        chg_rel[0].check_result="校验配置文件不存在"
-                        chg_rel[0].save()
-                    logger.error(u"获取结果成功,校验配置文件不存在：{}".format(datetime.datetime.now()))
-                    #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 校验配置文件不存在, 当前时间：{}".format(now))
-                    #return render_json({'code':True, 'text':"提取结果成功，校验配置文件不存在"})
-                elif exitCode == 3:#文件未发生变化
-                    #APPChange.objects.filter(task_id=task_instance_id).update(check_result="文件未发生变化",is_get_task_exe_result=1)
-                    APPChange.objects.filter(task_id=task_instance_id).delete()
-                    APPConfig.objects.filter(id=app_id).update(check_time=ipLogContent.get('startTime')
-                                                               ,check_result="文件未发生变化")
-                    chg_rel = APPChangeRel.objects.filter(app_id=app_id,change_file=obj.change_file)
-                    if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
-                        chg_rel[0].task_id=task_instance_id
-                        chg_rel[0].check_time=ipLogContent.get('startTime')
-                        chg_rel[0].check_result="文件未发生变化"
-                        chg_rel[0].save()
-                    logger.error(u"获取结果成功,文件未发生变化：{}".format(datetime.datetime.now()))
-                    #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 文件未发生变化, 当前时间：{}".format(now))
-                    #return render_json({'code':True, 'text':"提取结果成功，文件未发生变化"})  
-                elif exitCode == 0:#拷贝成功
-                    checkContent = ipLogContent.get('logContent') 
-                    file_md5 = re.findall("file_md5=\w+", checkContent)[0].split("=")[1]
-                    APPConfig.objects.filter(id=app_id).update(check_time=ipLogContent.get('startTime')
-                                                               ,check_result="文件发生变化，并备份成功")
-                    chg_rel = APPChangeRel.objects.filter(app_id=app_id,change_file=obj.change_file)
-                    if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
-                        #更新变更表
-                        APPChange.objects.filter(task_id=task_instance_id).update(check_result="文件发生变化，并备份成功"
+
+            result = client.job.get_task_ip_log(kwargs)
+            ipLogContent = result.get('data')[0].get('stepAnalyseResult')[0].get('ipLogContent')[0]
+            exitCode = ipLogContent.get('exitCode')
+            logger.error(u"获取结果成功：{}".format(datetime.datetime.now()))
+            #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u", 当前时间：{}".format(now))
+            if exitCode == 1:#参数不全
+                #APPChange.objects.filter(task_id=task_instance_id).update(check_result="调用脚本参数不全",is_get_task_exe_result=1)  
+                APPChange.objects.filter(task_id=task_instance_id).delete()
+                APPConfig.objects.filter(id=app_id).update(check_time=ipLogContent.get('startTime')
+                                                           ,check_result="调用脚本参数不全")
+                chg_rel = APPChangeRel.objects.filter(app_id=app_id,change_file=obj.change_file)
+                if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
+                    chg_rel[0].task_id=task_instance_id
+                    chg_rel[0].check_time=ipLogContent.get('startTime')
+                    chg_rel[0].check_result="调用脚本参数不全"
+                    chg_rel[0].save()
+                logger.error(u"获取结果成功,调用脚本参数不全：{}".format(datetime.datetime.now()))
+                #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 调用脚本参数不全, 当前时间：{}".format(now))
+                #return render_json({'code':True, 'text':"提取结果成功，调用脚本参数不全"})
+            elif exitCode == 2:#校验配置文件不存在
+                #APPChange.objects.filter(task_id=task_instance_id).update(check_result="调用脚本参数不全",is_get_task_exe_result=1)
+                APPChange.objects.filter(task_id=task_instance_id).delete()
+                APPConfig.objects.filter(id=app_id).update(check_time=ipLogContent.get('startTime')
+                                                           ,check_result="校验配置文件不存在")
+                chg_rel = APPChangeRel.objects.filter(app_id=app_id,change_file=obj.change_file)
+                if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
+                    chg_rel[0].task_id=task_instance_id
+                    chg_rel[0].check_time=ipLogContent.get('startTime')
+                    chg_rel[0].check_result="校验配置文件不存在"
+                    chg_rel[0].save()
+                logger.error(u"获取结果成功,校验配置文件不存在：{}".format(datetime.datetime.now()))
+                #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 校验配置文件不存在, 当前时间：{}".format(now))
+                #return render_json({'code':True, 'text':"提取结果成功，校验配置文件不存在"})
+            elif exitCode == 3:#文件未发生变化
+                #APPChange.objects.filter(task_id=task_instance_id).update(check_result="文件未发生变化",is_get_task_exe_result=1)
+                APPChange.objects.filter(task_id=task_instance_id).delete()
+                APPConfig.objects.filter(id=app_id).update(check_time=ipLogContent.get('startTime')
+                                                           ,check_result="文件未发生变化")
+                chg_rel = APPChangeRel.objects.filter(app_id=app_id,change_file=obj.change_file)
+                if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
+                    chg_rel[0].task_id=task_instance_id
+                    chg_rel[0].check_time=ipLogContent.get('startTime')
+                    chg_rel[0].check_result="文件未发生变化"
+                    chg_rel[0].save()
+                logger.error(u"获取结果成功,文件未发生变化：{}".format(datetime.datetime.now()))
+                #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 文件未发生变化, 当前时间：{}".format(now))
+                #return render_json({'code':True, 'text':"提取结果成功，文件未发生变化"})  
+            elif exitCode == 0:#拷贝成功
+                checkContent = ipLogContent.get('logContent') 
+                file_md5 = re.findall("file_md5=\w+", checkContent)[0].split("=")[1]
+                APPConfig.objects.filter(id=app_id).update(check_time=ipLogContent.get('startTime')
+                                                           ,check_result="文件发生变化，并备份成功")
+                chg_rel = APPChangeRel.objects.filter(app_id=app_id,change_file=obj.change_file)
+                if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
+                    #更新变更表
+                    APPChange.objects.filter(task_id=task_instance_id).update(check_result="文件发生变化，并备份成功"
+                                                                          ,is_get_task_exe_result=1
+                                                                          ,bak_time=ipLogContent.get('startTime')
+                                                                          ,bak_result="成功"
+                                                                          ,bak_path=obj.bak_path
+                                                                          ,app_last_bak_time=chg_rel[0].bak_time)
+                    chg_rel[0].bak_time=ipLogContent.get('startTime')
+                    chg_rel[0].bak_path=obj.bak_path
+                    chg_rel[0].file_md5=file_md5
+                    chg_rel[0].task_id=task_instance_id
+                    chg_rel[0].check_time=ipLogContent.get('startTime')
+                    chg_rel[0].check_result="文件发生变化，并备份成功"
+                    chg_rel[0].save()
+                else:#文件未存在备份记录
+                    APPChangeRel.objects.create(app_id=app_id,change_file=obj.change_file
+                                                ,bak_time=ipLogContent.get('startTime')
+                                                ,bak_path=obj.bak_path,task_id=task_instance_id
+                                                ,file_md5=file_md5,check_time=ipLogContent.get('startTime')
+                                                ,check_result="文件发生变化，并备份成功")
+                
+                    #更新变更表
+                    APPChange.objects.filter(task_id=task_instance_id).update(check_result="文件发生变化，并备份成功"
+                                                                          ,is_get_task_exe_result=1
+                                                                          ,bak_time=ipLogContent.get('startTime')
+                                                                          ,bak_result="成功"
+                                                                          ,bak_path=obj.bak_path
+                                                                          ,app_last_bak_time=ipLogContent.get('startTime'))
+                logger.error(u"获取结果成功,拷贝成功：{}".format(datetime.datetime.now()))
+                #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 拷贝成功, 当前时间：{}".format(now))
+                #return render_json({'code':True, 'text':"提取结果成功，拷贝成功"})     
+            else:#文件发生变化，备份异常失败,保留该task
+                chg_rel = APPChangeRel.objects.filter(app_id=app_id,change_file=obj.change_file)
+                if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
+                    app_last_bak_time=chg_rel[0].bak_time
+                APPChange.objects.filter(task_id=task_instance_id).update(check_result="文件发生变化，备份未成功"
+                                                                              ,check_time=ipLogContent.get('startTime')
                                                                               ,is_get_task_exe_result=1
-                                                                              ,bak_time=ipLogContent.get('startTime')
-                                                                              ,bak_result="成功"
-                                                                              ,bak_path=obj.bak_path
-                                                                              ,app_last_bak_time=chg_rel[0].bak_time)
-                        chg_rel[0].bak_time=ipLogContent.get('startTime')
-                        chg_rel[0].bak_path=obj.bak_path
-                        chg_rel[0].file_md5=file_md5
-                        chg_rel[0].task_id=task_instance_id
-                        chg_rel[0].check_time=ipLogContent.get('startTime')
-                        chg_rel[0].check_result="文件发生变化，并备份成功"
-                        chg_rel[0].save()
-                    else:#文件未存在备份记录
-                        APPChangeRel.objects.create(app_id=app_id,change_file=obj.change_file
-                                                    ,bak_time=ipLogContent.get('startTime')
-                                                    ,bak_path=obj.bak_path,task_id=task_instance_id
-                                                    ,file_md5=file_md5,check_time=ipLogContent.get('startTime')
-                                                    ,check_result="文件发生变化，并备份成功")
-                    
-                        #更新变更表
-                        APPChange.objects.filter(task_id=task_instance_id).update(check_result="文件发生变化，并备份成功"
-                                                                              ,is_get_task_exe_result=1
-                                                                              ,bak_time=ipLogContent.get('startTime')
-                                                                              ,bak_result="成功"
-                                                                              ,bak_path=obj.bak_path
-                                                                              ,app_last_bak_time=ipLogContent.get('startTime'))
-                    logger.error(u"获取结果成功,拷贝成功：{}".format(datetime.datetime.now()))
-                    #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 拷贝成功, 当前时间：{}".format(now))
-                    #return render_json({'code':True, 'text':"提取结果成功，拷贝成功"})     
-                else:#文件发生变化，备份异常失败,保留该task
-                    chg_rel = APPChangeRel.objects.filter(app_id=app_id,change_file=obj.change_file)
-                    if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
-                        app_last_bak_time=chg_rel[0].bak_time
-                    APPChange.objects.filter(task_id=task_instance_id).update(check_result="文件发生变化，备份未成功"
-                                                                                  ,check_time=ipLogContent.get('startTime')
-                                                                                  ,is_get_task_exe_result=1
-                                                                                  ,bak_result="失败"
-                                                                                  ,app_last_bak_time=app_last_bak_time) 
-                    logger.error(u"获取结果成功,文件发生变化，备份异常失败：{}".format(datetime.datetime.now()))
-                    #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 文件发生变化，备份异常失败, 当前时间：{}".format(now))
-                    #return render_json({'code':True, 'text':"提取结果成功，文件发生变化，备份异常失败"})      
-            else:
-                logger.error(u"获取结果成功,未到获取结果时间，备份异常失败：{}".format(datetime.datetime.now()))
-                #logger.info(u"task_id "+task_instance_id+u" 未到获取结果时间,校验时间:"+checkTime+u", 当前时间：{}".format(now))
-                #return render_json({'code':True, 'text':"未到提取结果时间"})
+                                                                              ,bak_result="失败"
+                                                                              ,app_last_bak_time=app_last_bak_time) 
+                logger.error(u"获取结果成功,文件发生变化，备份异常失败：{}".format(datetime.datetime.now()))
+                #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 文件发生变化，备份异常失败, 当前时间：{}".format(now))
+                #return render_json({'code':True, 'text':"提取结果成功，文件发生变化，备份异常失败"})      
