@@ -91,7 +91,7 @@ def exec_app_check(apps):
                 check_cycle = app.app_check_cycle * 60 * 60
             elif app.app_check_unit == "minute":
                 check_cycle = app.app_check_cycle * 60 
-            logger.info(u"开始校验应用 %s 校验周期为：%s 秒,上次校验时间为：%s 当前时间：{%s}" % (app.app_name, check_cycle,app.check_time,format(now)))    
+            #logger.info(u"开始校验应用 %s 校验周期为：%s 秒,上次校验时间为：%s 当前时间：{%s}" % (app.app_name, check_cycle,app.check_time,format(now)))    
             #判断是否达到check时间，如果check时间为空，则表示第一次校验，先执行一次备份
             
             #调用check方法，传入文件路径，MD5值，备份路径目录
