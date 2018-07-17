@@ -175,7 +175,7 @@ def addChange(app_in_host,app_name,task_id,change_file,app_id,bak_file_dir):
     check_result="检查成功，未返回检查结果"
     is_get_task_exe_result=0
     app = APPConfig.objects.get(id=app_id)
-    dict = Dicts.objects.get(id=appapp_type)
+    dict = Dicts.objects.get(id=app.app_type)
     try:
         APPChangeTask.objects.create(app_id=app_id,app_in_host=app_in_host,app_name=app_name
                              ,task_id=task_id,change_file=change_file
