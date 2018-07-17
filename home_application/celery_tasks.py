@@ -227,7 +227,7 @@ def load_app_check_result_task():
             result = client.job.get_task_ip_log(kwargs)
             ipLogContent = result.get('data')[0].get('stepAnalyseResult')[0].get('ipLogContent')[0]
             exitCode = ipLogContent.get('exitCode')
-            logger.error(u"获取结果成功：{}".task_instance_id)
+            logger.error(u"获取结果成功："+task_instance_id)
             #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u", 当前时间：{}".format(now))
             if exitCode == 1:#参数不全
                 #APPChange.objects.filter(task_id=task_instance_id).update(check_result="调用脚本参数不全",is_get_task_exe_result=1)  
