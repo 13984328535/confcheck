@@ -26,10 +26,10 @@ function job_fail
 }
 
 ##### 打印当时的时间戳及步骤id。
-function job_status(stepid)
+function job_status()
 {
     MSG="$*"
-    echo "`eval $NOW` job_step:[$stepid]"
+    echo "`eval $NOW` job_step:[$1]"
 }
 
 job_start
