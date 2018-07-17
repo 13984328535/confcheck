@@ -26,6 +26,7 @@ from blueking.component.shortcuts import get_client_by_request,get_client_by_use
 from doctest import script_from_examples
 import os,base64,copy,datetime,re,json
 from conf.default import STATICFILES_DIRS
+from home_application.models import Dicts
 #apps=[]
 #task-work
 @task()
@@ -174,11 +175,14 @@ def addChange(app_in_host,app_name,task_id,change_file,app_id,bak_file_dir):
     is_get_task_exe_result=0
     ret_text = "保存成功"
     ret_code = True
+    appcfg=APPConfig.objects.filter(id=app_id)
+    dict_obj = Dicts.objects.get(id=appcfg.app_type)
     try:
         APPChange.objects.create(app_id=app_id,app_in_host=app_in_host,app_name=app_name
                              ,task_id=task_id,change_file=change_file
                              ,check_time=check_time,check_result=check_result
-                             ,is_get_task_exe_result=is_get_task_exe_result,bak_path=bak_file_dir)
+                             ,is_get_task_exe_result=is_get_task_exe_result,bak_path=bak_file_dir
+                             ,type_id=dict_obj.id,app_type=dict_obj.dict_name)
         updAppCheck(app_id,check_time,check_result)
     except:
         logger.error(u"检查后保存数据失败：{}".format(datetime.datetime.now()))
