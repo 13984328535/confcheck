@@ -175,7 +175,7 @@ def addChange(app_in_host,app_name,task_id,change_file,app_id,bak_file_dir):
     is_get_task_exe_result=0
     ret_text = "保存成功"
     ret_code = True
-    appcfg=APPConfig.objects.filter(id=app_id)
+    appcfg=APPConfig.objects.get(id=app_id)
     dict_obj = Dicts.objects.get(id=appcfg.app_type)
     try:
         APPChange.objects.create(app_id=app_id,app_in_host=app_in_host,app_name=app_name
