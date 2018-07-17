@@ -91,7 +91,7 @@ def exec_app_check(apps):
                 check_cycle = app.app_check_cycle * 60 * 60
             elif app.app_check_unit == "minute":
                 check_cycle = app.app_check_cycle * 60 
-            logger.info(u"开始校验应用 "+app.app_name+u" 校验周期为："+check_cycle+u"秒,上次校验时间为："+app.check_time+u" 当前时间：{}".format(now))    
+            logger.info(u"开始校验应用 %s 校验周期为：%s 秒,上次校验时间为：%s 当前时间：{%s}" % (app.app_name, check_cycle,app.check_time,format(now)))    
             #判断是否达到check时间，如果check时间为空，则表示第一次校验，先执行一次备份
             
             #调用check方法，传入文件路径，MD5值，备份路径目录
@@ -128,11 +128,13 @@ def exec_app_check(apps):
                                 logger.error(u"执行脚本失败：{}".format(datetime.datetime.now()))
                             task_instance_id = result['data']['taskInstanceId']
                             addChange(app.app_host_ip,app.app_name,task_instance_id,file,app.id,bak_file_dir)
-                            logger.info(u"应用 "+app.app_name+u" 校验成功，校验周期为："+check_cycle+u"秒, 当前时间：{}".format(now))
+                            #logger.info(u"应用 "+app.app_name+u" 校验成功，校验周期为："+check_cycle+u"秒, 当前时间：{}".format(now))
                     else:
-                        logger.info(u"应用 "+app.app_name+u" 未到校验时间，校验周期为："+check_cycle+u"秒, 当前时间：{}".format(now)) 
+                        logger.info(u"应用 未到校验时间，校验周期为：秒, 当前时间：{}".format(now)) 
+                        #logger.info(u"应用 "+app.app_name+u" 未到校验时间，校验周期为："+check_cycle+u"秒, 当前时间：{}".format(now)) 
                 else :
-                    logger.info(u"应用 "+app.app_name+u" 开始第一次校验，校验周期为："+check_cycle+u"秒, 当前时间：{}".format(now))    
+                    logger.info(u"应用 开始第一次校验，校验周期为秒, 当前时间：{}".format(now))
+                    #logger.info(u"应用 "+app.app_name+u" 开始第一次校验，校验周期为："+check_cycle+u"秒, 当前时间：{}".format(now))    
                     #调用check方法，传入文件路径，MD5值，备份路径目录
                     #这里的文件路径主要来源于执行文件路径，和配置文件路径两个字段，每个字段均可能有多个文件，多个文件时用","分隔
                     biz_ips = {}
@@ -157,8 +159,8 @@ def exec_app_check(apps):
                         #脚本执行成功，
                         task_instance_id = result['data']['taskInstanceId']
                         addChange(app.app_host_ip,app.app_name,task_instance_id,file,app.id,bak_file_dir)       
-                            
-                        logger.info(u"应用 "+app.app_name+u" 开始第一次校验成功，校验周期为："+check_cycle+u"秒, 当前时间：{}".format(now))
+                        logger.info(u"应用 开始第一次校验成功，校验周期为：秒, 当前时间：{}".format(now))    
+                        #logger.info(u"应用 "+app.app_name+u" 开始第一次校验成功，校验周期为："+check_cycle+u"秒, 当前时间：{}".format(now))
 
 
 #检查发现有变更后（或第一次校验）调用该方法插入变更数据
@@ -218,7 +220,8 @@ def load_app_check_result_task():
                 result = client.job.get_task_ip_log(kwargs)
                 ipLogContent = result.get('data')[0].get('stepAnalyseResult')[0].get('ipLogContent')[0]
                 exitCode = ipLogContent.get('exitCode')
-                logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u", 当前时间：{}".format(now))
+                logger.error(u"获取结果成功：{}".format(datetime.datetime.now()))
+                #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u", 当前时间：{}".format(now))
                 if exitCode == 1:#参数不全
                     #APPChange.objects.filter(task_id=task_instance_id).update(check_result="调用脚本参数不全",is_get_task_exe_result=1)  
                     APPChange.objects.filter(task_id=task_instance_id).delete()
@@ -230,7 +233,8 @@ def load_app_check_result_task():
                         chg_rel[0].check_time=ipLogContent.get('startTime')
                         chg_rel[0].check_result="调用脚本参数不全"
                         chg_rel[0].save()
-                    logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 调用脚本参数不全, 当前时间：{}".format(now))
+                    logger.error(u"获取结果成功,调用脚本参数不全：{}".format(datetime.datetime.now()))
+                    #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 调用脚本参数不全, 当前时间：{}".format(now))
                     #return render_json({'code':True, 'text':"提取结果成功，调用脚本参数不全"})
                 elif exitCode == 2:#校验配置文件不存在
                     #APPChange.objects.filter(task_id=task_instance_id).update(check_result="调用脚本参数不全",is_get_task_exe_result=1)
@@ -243,7 +247,8 @@ def load_app_check_result_task():
                         chg_rel[0].check_time=ipLogContent.get('startTime')
                         chg_rel[0].check_result="校验配置文件不存在"
                         chg_rel[0].save()
-                    logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 校验配置文件不存在, 当前时间：{}".format(now))
+                    logger.error(u"获取结果成功,校验配置文件不存在：{}".format(datetime.datetime.now()))
+                    #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 校验配置文件不存在, 当前时间：{}".format(now))
                     #return render_json({'code':True, 'text':"提取结果成功，校验配置文件不存在"})
                 elif exitCode == 3:#文件未发生变化
                     #APPChange.objects.filter(task_id=task_instance_id).update(check_result="文件未发生变化",is_get_task_exe_result=1)
@@ -256,7 +261,8 @@ def load_app_check_result_task():
                         chg_rel[0].check_time=ipLogContent.get('startTime')
                         chg_rel[0].check_result="文件未发生变化"
                         chg_rel[0].save()
-                    logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 文件未发生变化, 当前时间：{}".format(now))
+                    logger.error(u"获取结果成功,文件未发生变化：{}".format(datetime.datetime.now()))
+                    #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 文件未发生变化, 当前时间：{}".format(now))
                     #return render_json({'code':True, 'text':"提取结果成功，文件未发生变化"})  
                 elif exitCode == 0:#拷贝成功
                     checkContent = ipLogContent.get('logContent') 
@@ -293,7 +299,8 @@ def load_app_check_result_task():
                                                                               ,bak_result="成功"
                                                                               ,bak_path=obj.bak_path
                                                                               ,app_last_bak_time=ipLogContent.get('startTime'))
-                    logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 拷贝成功, 当前时间：{}".format(now))
+                    logger.error(u"获取结果成功,拷贝成功：{}".format(datetime.datetime.now()))
+                    #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 拷贝成功, 当前时间：{}".format(now))
                     #return render_json({'code':True, 'text':"提取结果成功，拷贝成功"})     
                 else:#文件发生变化，备份异常失败,保留该task
                     chg_rel = APPChangeRel.objects.filter(app_id=app_id,change_file=obj.change_file)
@@ -304,8 +311,10 @@ def load_app_check_result_task():
                                                                                   ,is_get_task_exe_result=1
                                                                                   ,bak_result="失败"
                                                                                   ,app_last_bak_time=app_last_bak_time) 
-                    logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 文件发生变化，备份异常失败, 当前时间：{}".format(now))
+                    logger.error(u"获取结果成功,文件发生变化，备份异常失败：{}".format(datetime.datetime.now()))
+                    #logger.info(u"task_id "+task_instance_id+u" 获取结果成功,结果返回CODE:"+exitCode+u" 文件发生变化，备份异常失败, 当前时间：{}".format(now))
                     #return render_json({'code':True, 'text':"提取结果成功，文件发生变化，备份异常失败"})      
             else:
-                logger.info(u"task_id "+task_instance_id+u" 未到获取结果时间,校验时间:"+checkTime+u", 当前时间：{}".format(now))
+                logger.error(u"获取结果成功,未到获取结果时间，备份异常失败：{}".format(datetime.datetime.now()))
+                #logger.info(u"task_id "+task_instance_id+u" 未到获取结果时间,校验时间:"+checkTime+u", 当前时间：{}".format(now))
                 #return render_json({'code':True, 'text':"未到提取结果时间"})
