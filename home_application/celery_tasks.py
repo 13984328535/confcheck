@@ -241,7 +241,7 @@ def load_app_check_result_task():
                             chg_rel[0].check_time=ipLogContent.get('startTime')
                             chg_rel[0].check_result="调用脚本参数不全"
                             chg_rel[0].save()
-                        logger.info(u"task_id获取结果成功-调用脚本参数不全, 当前时间：%d" %  task_instance_id)
+                        logger.info(u"task_id获取结果成功-调用脚本参数不全, 当前task_id：%d" %  task_instance_id)
                         #return render_json({'code':True, 'text':"提取结果成功，调用脚本参数不全"})
                     elif exitCode == 2:#校验配置文件不存在
                         #APPChange.objects.filter(task_id=task_instance_id).update(check_result="调用脚本参数不全",is_get_task_exe_result=1)
