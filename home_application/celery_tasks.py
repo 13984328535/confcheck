@@ -63,7 +63,8 @@ periodic_task：程序运行时自动触发周期任务
 """
 @periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
 def exec_app_check_task():
-    execute_task()
+    #execute_task()
+    apps = APPConfig.objects.all()
     #apps = cache.__getattr__("V_CACHE_APPS")
     logger.info(u"加载应用配置缓存数据成功,数据记录数："+len(apps)+u"{}".format(now))
     if apps == None or len(apps) <= 0:
