@@ -278,22 +278,22 @@ def load_app_check_result_task():
                         if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
                             #更新变更表
                             cfg_task = APPChangeTask.objects.filter(task_id=task_instance_id)
-                            APPChange.objects.create(app_id=cfg_task.app_id,app_in_host=cfg_task.app_in_host
-                                                     ,app_name=cfg_task.app_name,app_type=cfg_task.app_type
-                                                     ,type_id=cfg_task.type_id,change_file=cfg_task.change_file
+                            APPChange.objects.create(app_id=cfg_task[0].app_id,app_in_host=cfg_task[0].app_in_host
+                                                     ,app_name=cfg_task[0].app_name,app_type=cfg_task[0].app_type
+                                                     ,type_id=cfg_task[0].type_id,change_file=cfg_task[0].change_file
                                                      ,app_last_bak_time=chg_rel[0].bak_time
                                                      ,bak_time=ipLogContent.get('startTime')
                                                      ,bak_result="文件发生变化，并备份成功"
                                                      ,bak_path=obj.bak_path
                                                      ,check_result="文件发生变化，并备份成功"
-                                                     ,check_time=cfg_task.check_time
+                                                     ,check_time=cfg_task[0].check_time
                                                      ,is_get_task_exe_result=1)
                             APPChangeTask.objects.filter(task_id=task_instance_id).dele()#不保存已知类型错误或成功
                             chg_rel[0].bak_time=ipLogContent.get('startTime')
                             chg_rel[0].bak_path=obj.bak_path
                             chg_rel[0].file_md5=file_md5
                             chg_rel[0].task_id=task_instance_id
-                            chg_rel[0].check_time=cfg_task.check_time
+                            chg_rel[0].check_time=cfg_task[0].check_time
                             chg_rel[0].check_result="文件发生变化，并备份成功"
                             chg_rel[0].save()
                         else:#文件未存在备份记录
@@ -327,15 +327,15 @@ def load_app_check_result_task():
                                                                                       ,is_get_task_exe_result=exeStatus
                                                                                       ,bak_result="失败"
                                                                                       ,app_last_bak_time=app_last_bak_time) 
-                        APPChange.objects.create(app_id=cfg_task.app_id,app_in_host=cfg_task.app_in_host
-                                                     ,app_name=cfg_task.app_name,app_type=cfg_task.app_type
-                                                     ,type_id=cfg_task.type_id,change_file=cfg_task.change_file
+                        APPChange.objects.create(app_id=cfg_task[0].app_id,app_in_host=cfg_task[0].app_in_host
+                                                     ,app_name=cfg_task[0].app_name,app_type=cfg_task[0].app_type
+                                                     ,type_id=cfg_task[0].type_id,change_file=cfg_task[0].change_file
                                                      ,app_last_bak_time=app_last_bak_time
                                                      ,bak_time=ipLogContent.get('startTime')
                                                      ,bak_result="失败"
                                                      ,bak_path=obj.bak_path
                                                      ,check_result="文件发生变化，并备份成功"
-                                                     ,check_time=cfg_task.check_time
+                                                     ,check_time=cfg_task[0].check_time
                                                      ,is_get_task_exe_result=1)
                         logger.info(u"task_id获取结果成功,结果 文件发生变化，备份异常失败, 当前时间：{}".format(now))
                 elif exeStatus == 7 or exeStatus == 5:#不正常exeStatus
