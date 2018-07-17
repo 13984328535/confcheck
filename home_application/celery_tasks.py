@@ -281,14 +281,16 @@ def load_app_check_result_task():
                             cfg_task = APPChangeTask.objects.filter(task_id=task_instance_id)
                             if cfg_task != None and len(cfg_task) > 0:
                                 APPChange.objects.create(app_id=cfg_task[0].app_id,app_in_host=cfg_task[0].app_in_host\
-                                                         ,app_name=cfg_task[0].app_name,app_type=cfg_task[0].app_type\
+                                                         ,app_name=cfg_task[0].app_name.encode("utf-8")
+                                                         ,app_type=cfg_task[0].app_type.encode("utf-8")\
                                                          ,type_id=cfg_task[0].type_id,change_file=cfg_task[0].change_file\
                                                          ,app_last_bak_time=chg_rel[0].bak_time\
                                                          ,bak_time=ipLogContent.get('startTime')\
                                                          ,bak_result=u"成功"\
                                                          ,bak_path=obj.bak_path\
                                                          ,check_result=u"文件发生变化，并备份成功"\
-                                                         ,check_time=cfg_task[0].check_time)
+                                                         ,check_time=cfg_task[0].check_time
+                                                         ,is_get_task_exe_result=is_get_task_exe_result)
                                 APPChangeTask.objects.filter(task_id=task_instance_id).delete()#不保存已知类型错误或成功
                             chg_rel[0].bak_time=ipLogContent.get('startTime')
                             chg_rel[0].bak_path=obj.bak_path
