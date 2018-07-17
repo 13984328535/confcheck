@@ -79,6 +79,7 @@ def exec_app_check_task():
     exec_app_check(apps)
 
 def exec_app_check(apps):
+    now=datetime.datetime.now()
     if apps != None or len(apps) > 0:
         for app in apps:
             user_name = app.app_creator
