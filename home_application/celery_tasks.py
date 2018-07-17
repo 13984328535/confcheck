@@ -210,6 +210,7 @@ def redExecFile(file_name):
 """
 @periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
 def load_app_check_result_task():
+    now = datetime.datetime.now()
     dicts = APPChangeTask.objects.filter(is_get_task_exe_result=0)
     if dicts != None and len(dicts) > 0:
         for obj in dicts:
