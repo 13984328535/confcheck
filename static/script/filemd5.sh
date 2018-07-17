@@ -25,6 +25,13 @@ function job_fail
     exit 1
 }
 
+##### 打印当时的时间戳及步骤id。
+function job_status(stepid)
+{
+    MSG="$*"
+    echo "`eval $NOW` job_step:[$stepid]"
+}
+
 job_start
 
 ###### 可在此处开始编写您的脚本逻辑代码
@@ -32,17 +39,22 @@ job_start
 ###### 如果返回值为0，则认为此脚本执行成功，如果非0，则认为脚本执行失败
 #conf_file, md5, bakpath
 
+job_status(1)
 if [ $# -lt 3 ]; then exit 1; fi        #参数不全
 
 conf_file=$1
 
+job_status(2)
 if [ ! -f $conf_file ]; then exit 2 ; fi     #配置文件不存在
 
+job_status(3)
 file_md5=`md5sum $conf_file |cut -d ' ' -f1`
 echo "file_md5=$file_md5"
 
+job_status(4)
 if [ $file_md5 == $2 ]; then exit 3; fi     #md5相同
 
+job_status(5)
 bakpath=$3
 
 if [ ! -d $bakpath ]; then
@@ -51,6 +63,10 @@ else
 	exit 4;       #路径已存在
 fi
 
+job_status(6)
+
 cp $conf_file $bakpath
+
+job_status(7)
 
 exit 0;
