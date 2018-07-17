@@ -20,7 +20,7 @@ from celery.schedules import crontab
 from celery.task import periodic_task
 
 from common.log import logger
-from home_application.models import APPConfig
+from home_application.models import APPConfig, APPChange, APPChangeRel
 from django.core.cache import cache
 
 #task-work
@@ -60,7 +60,7 @@ celery 周期任务示例
 run_every=crontab(minute='*/10', hour='*', day_of_week="*")：每 10 分钟执行一次任务
 periodic_task：程序运行时自动触发周期任务
 """
-@periodic_task(run_every=crontab(minute='*/10', hour='*', day_of_week="*"))
+@periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
 def exec_app_check_task():
     execute_task()
     apps = cache.__getattr__("V_CACHE_APPS")
@@ -195,7 +195,7 @@ def redExecFile(file_name):
 """
 上部为校验的task，下部为获取结果的task
 """
-@periodic_task(run_every=crontab(minute='*/2', hour='*', day_of_week="*"))
+@periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
 def load_app_check_result_task():
     dicts = APPChange.objects.filter(is_get_task_exe_result=0)
     if dicts != None and len(dicts) > 0:
