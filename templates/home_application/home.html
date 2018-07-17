@@ -1,25 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%inherit file="/base.html"/>
+<html>
+	<head>
+		<title>home.html</title>
 
-<%block name="content">
-    <div class="home-page">
-    	<div class="page-arrow">
-			<div class="container">
-				<!-- 蓝鲸智云开发框架说明  Start -->
-				<div class="tc title-word">
-					<p>欢迎使用蓝鲸智云集成平台</p>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="${STATIC_URL}mystatic/css/layout.css" />
+		<link rel="stylesheet" type="text/css" href="${STATIC_URL}mystatic/css/home.css" />
+		<link rel="stylesheet" type="text/css" href="${STATIC_URL}mystatic/css/style.css" />
+	</head>
+	<body>
+		<div class="">
+			<div class="indentify clearfix">
+				<div class="indentify-class padding-lr clearfix">
+					<ul class="class-content clearfix">
+						<li class="fl margin-large-35">
+							<a class="class-detail fl " href="#">
+								<div class="class-detail-top">
+									<div class="text-center indentify-icon">
+										<img src="${STATIC_URL}mystatic/image/icon-data.png">
+									</div>
+									<h3 class="text-center">
+										数据类
+									</h3>
+									<p class="margin-tb padding-bottom text-justify info">
+										数据信息、数据模型
+									</p>
+								</div>
+								<p class="continue text-big">
+									查看详细
+								</p> 
+							</a>
+						</li>
+						<li class="fl margin-large-35">
+							<a class="class-detail fl " href="#">
+								<div class="class-detail-top">
+									<div class="text-center indentify-icon">
+										<img src="${STATIC_URL}mystatic/image/icon-project.png">
+									</div>
+									<h3 class="text-center">
+										文件类
+									</h3>
+									<p class="margin-tb padding-bottom text-justify info">
+										文件类管理
+									</p>
+								</div>
+								<p class="continue text-big">
+									查看详细
+								</p> 
+							</a>
+						</li>
+						<li class="fl margin-large-35">
+							<a class="class-detail fl " href="#">
+								<div class="class-detail-top">
+									<div class="text-center indentify-icon">
+										<img src="${STATIC_URL}mystatic/image/icon-yy.png">
+									</div>
+									<h3 class="text-center">
+										应用类
+									</h3>
+									<p class="margin-tb padding-bottom text-justify info">
+										应用信息
+									</p>
+								</div>
+								<p class="continue text-big">
+									查看详细
+								</p> 
+							</a>
+						</li>
+						<li class="fl margin-large-35">
+							<a class="class-detail fl " href="#">
+								<div class="class-detail-top">
+									<div class="text-center indentify-icon">
+										<img src="${STATIC_URL}mystatic/image/icon-other.png">
+									</div>
+									<h3 class="text-center">
+										其他
+									</h3>
+									<p class="margin-tb padding-bottom text-justify info">
+										其他
+									</p>
+								</div>
+								<p class="continue text-big">
+									查看详细
+								</p> 
+							</a>
+						</li>
+					</ul>
 				</div>
-				<div class="tc title-word-second">
-					<p>蓝鲸智云开发框架<small class="pl10">助力你的自动化</small></p>
-				</div>
-				<hr class="cutting-line">
-				<div class="tc frame-explain-text">
-					<p>您现在打开的应用是由蓝鲸智云示例代码生成的，该示例代码称为“APP开发框架”。</p>
-					<p>蓝鲸智云集成平台（PaaS）提供了完善的前后台开发框架、调度引擎、公共组件等模块，帮助业务的产品和技术人员快速构建低成本、免运维的支撑工具和运营系统。</p>
-					<p>若想体验快速开发应用的功能，请前往<a class="developer-center" href="${BK_PAAS_HOST}" target="_blank">“开发者中心”</a>。</p>
-				</div>
-				<!-- 蓝鲸智云开发框架说明  End -->
 			</div>
 		</div>
-    </div>
-</%block>
-
+	</body>
+</html>
