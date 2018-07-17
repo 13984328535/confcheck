@@ -69,7 +69,7 @@ celery 周期任务示例
 run_every=crontab(minute='*/10', hour='*', day_of_week="*")：每 10 分钟执行一次任务
 periodic_task：程序运行时自动触发周期任务
 """
-@periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
+@periodic_task(run_every=crontab(minute='*/10', hour='*', day_of_week="*"))
 def exec_app_check_task():
     now = datetime.datetime.now()
     apps = APPConfig.objects.all()
@@ -208,7 +208,7 @@ def redExecFile(file_name):
 """
 上部为校验的task，下部为获取结果的task
 """
-@periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
+@periodic_task(run_every=crontab(minute='*/2', hour='*', day_of_week="*"))
 def load_app_check_result_task():
     now = datetime.datetime.now()
     dicts = APPChangeTask.objects.filter(is_get_task_exe_result=0)
@@ -241,7 +241,7 @@ def load_app_check_result_task():
                             chg_rel[0].check_time=ipLogContent.get('startTime')
                             chg_rel[0].check_result="调用脚本参数不全"
                             chg_rel[0].save()
-                        logger.info(u"task_id获取结果成功-调用脚本参数不全, 当前task_id：%d" %  task_instance_id)
+                        logger.info(u"task_id获取结果成功-调用脚本参数不全, 当前时间：{}".format(now))
                         #return render_json({'code':True, 'text':"提取结果成功，调用脚本参数不全"})
                     elif exitCode == 2:#校验配置文件不存在
                         #APPChange.objects.filter(task_id=task_instance_id).update(check_result="调用脚本参数不全",is_get_task_exe_result=1)
@@ -361,14 +361,14 @@ def load_app_check_result_task():
                     if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
                         app_last_bak_time=chg_rel[0].bak_time
                         APPChangeTask.objects.filter(task_id=task_instance_id).\
-                        update(check_result="文件发生变化，脚本未执行结束"
+                        update(check_result="文件发生变化，脚本执行异常"
                                ,check_time=ipLogContent.get('startTime')
                                ,is_get_task_exe_result=exeStatus
                                ,bak_result="失败"
                                ,app_last_bak_time=app_last_bak_time)
                     else:
                         APPChangeTask.objects.filter(task_id=task_instance_id).\
-                        update(check_result="文件发生变化，脚本未执行结束"
+                        update(check_result="文件发生变化，脚本执行异常"
                                ,check_time=ipLogContent.get('startTime')
                                ,is_get_task_exe_result=exeStatus
                                ,bak_result="失败"
