@@ -50,7 +50,7 @@ def execute_task():
     now = datetime.datetime.now()
     logger.info(u"正在通知任务刷新缓存，当前时间：{}".format(now))
     # 调用定时任务
-    async_task_load_app_config.apply_async(args=[now.hour, now.minute], eta=now + datetime.timedelta(seconds=1))
+    async_task_load_app_config.apply_async()
 
 
 #后台任务-周期执行，判断配置表是否到达check时间
