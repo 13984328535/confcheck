@@ -241,7 +241,7 @@ def load_app_check_result_task():
                             chg_rel[0].check_time=ipLogContent.get('startTime')
                             chg_rel[0].check_result="调用脚本参数不全"
                             chg_rel[0].save()
-                        logger.info(u"task_id获取结果成功-调用脚本参数不全, 当前时间：{}".format(now))
+                        logger.info(u"task_id获取结果成功-调用脚本参数不全, 当前时间：%d" %  task_instance_id)
                         #return render_json({'code':True, 'text':"提取结果成功，调用脚本参数不全"})
                     elif exitCode == 2:#校验配置文件不存在
                         #APPChange.objects.filter(task_id=task_instance_id).update(check_result="调用脚本参数不全",is_get_task_exe_result=1)
@@ -305,15 +305,15 @@ def load_app_check_result_task():
                         
                             #更新变更表
                             cfg_task = APPChangeTask.objects.filter(task_id=task_instance_id)
-                            APPChange.objects.create(app_id=cfg_task.app_id,app_in_host=cfg_task.app_in_host
-                                                     ,app_name=cfg_task.app_name,app_type=cfg_task.app_type
-                                                     ,type_id=cfg_task.type_id,change_file=cfg_task.change_file
+                            APPChange.objects.create(app_id=cfg_task[0].app_id,app_in_host=cfg_task[0].app_in_host
+                                                     ,app_name=cfg_task[0].app_name,app_type=cfg_task[0].app_type
+                                                     ,type_id=cfg_task[0].type_id,change_file=cfg_task[0].change_file
                                                      ,app_last_bak_time=ipLogContent.get('startTime')
                                                      ,bak_time=ipLogContent.get('startTime')
                                                      ,bak_result="成功"
                                                      ,bak_path=obj.bak_path
                                                      ,check_result="文件发生变化，并备份成功"
-                                                     ,check_time=cfg_task.check_time
+                                                     ,check_time=cfg_task[0].check_time
                                                      ,is_get_task_exe_result=1)
                             APPChangeTask.objects.filter(task_id=task_instance_id).dele()#不保存已知类型错误或成功
                         logger.info(u"task_id 获取结果成功,结果拷贝成功, 当前时间：{}".format(now))
