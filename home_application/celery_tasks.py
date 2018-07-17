@@ -22,7 +22,7 @@ from celery.task import periodic_task
 from common.log import logger
 from home_application.models import APPConfig, APPChange, APPChangeRel
 from django.core.cache import cache
-
+apps=[]
 #task-work
 @task()
 def async_task_load_app_config():
@@ -32,8 +32,8 @@ def async_task_load_app_config():
     now = datetime.datetime.now()
     logger.info(u"async_task_load_app_config 定时任务加载应用配置数据：{}".format(now))
     apps = APPConfig.objects.all()
-    cache.__delattr__("V_CACHE_APPS")
-    cache.__setattr__("V_CACHE_APPS", apps)
+    #cache.__delattr__("V_CACHE_APPS")
+    #cache.__setattr__("V_CACHE_APPS", apps)
     logger.info(u"async_task_load_app_config 定时任务加载应用配置数据成功数据记录数："+len(apps)+u"：{}".format(now))
 
 
@@ -64,7 +64,7 @@ periodic_task：程序运行时自动触发周期任务
 @periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
 def exec_app_check_task():
     execute_task()
-    apps = cache.__getattr__("V_CACHE_APPS")
+    #apps = cache.__getattr__("V_CACHE_APPS")
     logger.info(u"加载应用配置缓存数据成功,数据记录数："+len(apps)+u"{}".format(now))
     if apps == None or len(apps) <= 0:
         logger.error(u"缓存无数据，从数据库加载数据：{}".format(now))
