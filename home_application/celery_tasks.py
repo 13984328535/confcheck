@@ -13,7 +13,7 @@ celery 任务示例
 本地启动celery命令: python  manage.py  celery  worker  --settings=settings
 周期性任务还需要启动celery调度命令：python  manage.py  celerybeat --settings=settings
 """
-import datetime
+import datetime,time
 
 from celery import task
 from celery.schedules import crontab
@@ -22,6 +22,8 @@ from celery.task import periodic_task
 from common.log import logger
 from home_application.models import APPConfig, APPChange, APPChangeRel
 from django.core.cache import cache
+from blueking.component.shortcuts import get_client_by_request,get_client_by_user
+from doctest import script_from_examples
 #apps=[]
 #task-work
 @task()
