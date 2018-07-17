@@ -29,6 +29,7 @@ def async_task_load_app_config():
     """
             定义一个 celery 异步任务,负责更新应用配置列表，当有应用数据更新时触发
     """
+    now = datetime.datetime.now()
     logger.info(u"async_task_load_app_config 定时任务加载应用配置数据：{}".format(now))
     apps = APPConfig.objects.all()
     cache.__delattr__("V_CACHE_APPS")
