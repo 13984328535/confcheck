@@ -223,7 +223,7 @@ def load_app_check_result_task():
             }
             currTime = datetime.datetime.now()
             checkTime = obj.check_time
-            if (currTime - checkTime).seconds > 10: #校验120秒后去获取结果
+            if (currTime - checkTime).seconds > 10: #校验10秒后去获取结果
                 result = client.job.get_task_ip_log(kwargs)
                 ipLogContent = result.get('data')[0].get('stepAnalyseResult')[0].get('ipLogContent')[0]
                 exeStatus = int(ipLogContent.get('status'))
@@ -279,19 +279,17 @@ def load_app_check_result_task():
                         if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
                             #更新变更表
                             cfg_task = APPChangeTask.objects.filter(task_id=task_instance_id)
-                            if cfg_task != None and len(cfg_task) > 0:
+                            if cfg_task != None and len(cfg_task) > 0 and chg_rel[0].file_md5 != file_md5:
                                 APPChange.objects.create(app_id=cfg_task[0].app_id,app_in_host=cfg_task[0].app_in_host
                                                          ,app_name=cfg_task[0].app_name
                                                          ,app_type=cfg_task[0].app_type
                                                          ,type_id=cfg_task[0].type_id,change_file=cfg_task[0].change_file
-                                                         ,app_last_bak_time=chg_rel[0].bak_time
-                                                         ,bak_time=ipLogContent.get('startTime')
                                                          ,bak_result=u"成功"
                                                          ,bak_path=obj.bak_path
+                                                         ,confirm_status="0"
                                                          ,check_result=u"文件发生变化，并备份成功"
-                                                         ,check_time=cfg_task[0].check_time
                                                          ,is_get_task_exe_result=is_get_task_exe_result) 
-                                APPChangeTask.objects.filter(task_id=task_instance_id).delete()#不保存已知类型错误或成功
+                            APPChangeTask.objects.filter(task_id=task_instance_id).delete()#不保存已知类型错误或成功
                             chg_rel[0].bak_time=ipLogContent.get('startTime')
                             chg_rel[0].bak_path=obj.bak_path
                             chg_rel[0].file_md5=file_md5
@@ -309,15 +307,16 @@ def load_app_check_result_task():
                             #更新变更表
                             cfg_task = APPChangeTask.objects.filter(task_id=task_instance_id)
                             if cfg_task != None and len(cfg_task) > 0:
-                                APPChange.objects.create(app_id=cfg_task[0].app_id,app_in_host=cfg_task[0].app_in_host\
-                                                         ,app_name=cfg_task[0].app_name,app_type=cfg_task[0].app_type\
-                                                         ,type_id=cfg_task[0].type_id,change_file=cfg_task[0].change_file\
-                                                         ,app_last_bak_time=ipLogContent.get('startTime')\
-                                                         ,bak_time=ipLogContent.get('startTime')\
-                                                         ,bak_result=u"成功"\
-                                                         ,bak_path=obj.bak_path\
-                                                         ,check_result=u"文件发生变化，并备份成功"\
-                                                         ,check_time=cfg_task[0].check_time\
+                                APPChange.objects.create(app_id=cfg_task[0].app_id,app_in_host=cfg_task[0].app_in_host
+                                                         ,app_name=cfg_task[0].app_name,app_type=cfg_task[0].app_type
+                                                         ,type_id=cfg_task[0].type_id,change_file=cfg_task[0].change_file
+                                                         ,app_last_bak_time=ipLogContent.get('startTime')
+                                                         ,bak_time=ipLogContent.get('startTime')
+                                                         ,bak_result=u"成功"
+                                                         ,bak_path=obj.bak_path
+                                                         ,confirm_status="0"
+                                                         ,check_result=u"文件发生变化，并备份成功"
+                                                         ,check_time=cfg_task[0].check_time
                                                          ,is_get_task_exe_result=is_get_task_exe_result)
                                 APPChangeTask.objects.filter(task_id=task_instance_id).delete()#不保存已知类型错误或成功
                         logger.info(u"task_id 获取结果成功,结果拷贝成功, 当前时间：{}".format(now))
@@ -325,23 +324,43 @@ def load_app_check_result_task():
                         chg_rel = APPChangeRel.objects.filter(app_id=app_id,change_file=obj.change_file)
                         if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
                             app_last_bak_time=chg_rel[0].bak_time
-                        cfg_task = APPChangeTask.objects.filter(task_id=task_instance_id)
-                        if cfg_task != None and len(cfg_task) > 0:
+                            cfg_task = APPChangeTask.objects.filter(task_id=task_instance_id)
+                            if cfg_task != None and len(cfg_task) > 0 and chg_rel[0].file_md5 != file_md5:
+                                APPChange.objects.create(app_id=cfg_task[0].app_id,app_in_host=cfg_task[0].app_in_host
+                                                             ,app_name=cfg_task[0].app_name,app_type=cfg_task[0].app_type
+                                                             ,type_id=cfg_task[0].type_id,change_file=cfg_task[0].change_file
+                                                             ,app_last_bak_time=app_last_bak_time
+                                                             ,bak_time=ipLogContent.get('startTime')
+                                                             ,bak_result=u"失败"
+                                                             ,bak_path=obj.bak_path
+                                                             ,confirm_status="0"
+                                                             ,check_result=u"文件发生变化，备份未成功"
+                                                             ,check_time=cfg_task[0].check_time
+                                                             ,is_get_task_exe_result=is_get_task_exe_result)
                             APPChangeTask.objects.filter(task_id=task_instance_id).update(check_result=u"文件发生变化，备份未成功"
-                                                                                          ,check_time=ipLogContent.get('startTime')
-                                                                                          ,is_get_task_exe_result=exeStatus
-                                                                                          ,bak_result=u"失败"
-                                                                                          ,app_last_bak_time=app_last_bak_time) 
-                            APPChange.objects.create(app_id=cfg_task[0].app_id,app_in_host=cfg_task[0].app_in_host\
-                                                         ,app_name=cfg_task[0].app_name,app_type=cfg_task[0].app_type\
-                                                         ,type_id=cfg_task[0].type_id,change_file=cfg_task[0].change_file\
-                                                         ,app_last_bak_time=app_last_bak_time\
-                                                         ,bak_time=ipLogContent.get('startTime')\
-                                                         ,bak_result=u"失败"\
-                                                         ,bak_path=obj.bak_path\
-                                                         ,check_result=u"文件发生变化，并备份成功"\
-                                                         ,check_time=cfg_task[0].check_time\
-                                                         ,is_get_task_exe_result=is_get_task_exe_result)
+                                                             ,check_time=ipLogContent.get('startTime')
+                                                             ,is_get_task_exe_result=exeStatus
+                                                             ,bak_result=u"失败"
+                                                             ,app_last_bak_time=app_last_bak_time)
+                        else:
+                            cfg_task = APPChangeTask.objects.filter(task_id=task_instance_id)
+                            if cfg_task != None and len(cfg_task) > 0:
+                                APPChange.objects.create(app_id=cfg_task[0].app_id,app_in_host=cfg_task[0].app_in_host
+                                                             ,app_name=cfg_task[0].app_name,app_type=cfg_task[0].app_type
+                                                             ,type_id=cfg_task[0].type_id,change_file=cfg_task[0].change_file
+                                                             ,app_last_bak_time=ipLogContent.get('startTime')
+                                                             ,bak_time=ipLogContent.get('startTime')
+                                                             ,bak_result=u"失败"
+                                                             ,bak_path=obj.bak_path
+                                                             ,confirm_status="0"
+                                                             ,check_result=u"文件发生变化，备份未成功"
+                                                             ,check_time=cfg_task[0].check_time
+                                                             ,is_get_task_exe_result=is_get_task_exe_result)
+                            APPChangeTask.objects.filter(task_id=task_instance_id).update(check_result=u"文件发生变化，备份未成功"
+                                                             ,check_time=ipLogContent.get('startTime')
+                                                             ,is_get_task_exe_result=exeStatus
+                                                             ,bak_result=u"失败"
+                                                             ,app_last_bak_time=ipLogContent.get('startTime'))     
                         logger.info(u"task_id获取结果成功,结果 文件发生变化，备份异常失败, 当前时间：{}".format(now))
                 elif exeStatus == 7 or exeStatus == 5:#不正常exeStatus
                     is_get_task_exe_result = 0
