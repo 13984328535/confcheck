@@ -60,7 +60,7 @@
 	/**
 	 * 模板
 	 */
-	var template = '<div style="float:left;width:100%"><div style="float: left;margin-left:10px;"><input type="button" id="pagerAddBtn" value="增加" onclick="addInfo();" class="btn btn-info">'+
+	var template = '<div style="float:left;width:75%"><div style="float: left;margin-left:10px;"><input type="button" id="pagerAddBtn" value="增加" onclick="addInfo();" class="btn btn-info">'+
 		 '</div><div class="pagination scroPage scroPageRight" style="float:right;margin-right: 10px;">' + 
 		 '<ul>' + 
 		 '<li id="scroPageList" class="disabled scroPageList"><a>每页 <select id="scroPageDropList"></select> 条</a></li>' + 

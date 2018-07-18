@@ -20,9 +20,10 @@ function deleteInfo(id,name){
 		  	url: window.parent.getRootPath()+"doDelAPPConfig/",
 		  	data: {"id":id},
 		  	success: function(returnData){
+		  		window.parent.hideLayerLoading();
 				returnData = window.parent.parseJsonStr(returnData);
-				layer.msg(returnData.message,{icon: 1,time: 2000});
-				window.parent.triggerClick('Applicationinformationmanagement');
+				window.parent.layer.msg(returnData.text,{icon: 1,time: 2000});
+				window.parent.triggerClick('Applicationinformationmanagement',1000);
 			},
 		  	dataType: 'json'
 		});
@@ -41,6 +42,10 @@ function addInfo(){
 	});
 }
 $(function(){
+	searchApplyInfo();
+});
+function searchApplyInfo(){
+	$('#page3').empty();
 	$('#page3').scroPage({
 	    url : window.parent.getRootPath()+"getPagingAPPConfigList/",
 	    asyncLoad : true,
@@ -53,11 +58,24 @@ $(function(){
 	    	if(data && data.list && data.list.length > 0){
 	    		$.each(data.list,function(i,row){
 	    			var tr = $('<tr>');
-	    			//$(tr).append('<td><label><input type="checkbox"></label></td>');
 	    			$(tr).append('<td>'+row.id+'</td>');
 	    			$(tr).append('<td>'+row.app_name+'</td>');
 	    			$(tr).append('<td>'+row.app_host_ip+'</td>');
-	    			$(tr).append('<td>'+row.app_status+'</td>');
+	    			$(tr).append('<td>'+row.app_type+'</td>');
+	    			if(row.app_check_unit=='day'){
+	    				$(tr).append('<td>'+row.app_check_cycle+'(天)</td>');
+	    			}else if(row.app_check_unit=='hour'){
+	    				$(tr).append('<td>'+row.app_check_cycle+'(时)</td>');
+	    			}else if(row.app_check_unit=='minute'){
+	    				$(tr).append('<td>'+row.app_check_cycle+'(分)</td>');
+	    			}else{
+	    				$(tr).append('<td></td>');
+	    			}
+	    			if(row.app_status==0){
+	    				$(tr).append('<td>有效</td>');
+	    			}else{
+	    				$(tr).append('<td>无效</td>');
+	    			}
 	    			$(tr).append('<td>'+row.app_creator+'</td>');
 	    			$(tr).append('<td>'+row.app_create_time+'</td>');
 	    			$(tr).append('<td><input type="button" value="修改" onclick="updateInfo(\''+row.id+'\',\''+row.app_name+'\');" class="button" style="margin-left: 15px;"/><input type="button" value="删除" onclick="deleteInfo(\''+row.id+'\',\''+row.app_name+'\');" class="button" style="margin-left: 15px;"/></td>');
@@ -67,8 +85,9 @@ $(function(){
 	    },
 	    params : function(){
 	        return {
-	            userName : null
+	        	appName:$("#appName").val(),
+	        	appIp:$("#appIp").val()
 	        };
 	    }
 	});
-});
+}

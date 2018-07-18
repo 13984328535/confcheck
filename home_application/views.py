@@ -140,7 +140,8 @@ def getPagingAPPTypeDictList(rq):
         endPos = startPos + page_size
     dicts = Dicts.objects.filter(dict_type="APP_TYPE")[startPos:endPos]
     total = Dicts.objects.filter(dict_type="APP_TYPE").count()
-    pageCount = total / page_size
+    #pageCount = total / page_size
+    pageCount = (total  +  page_size  - 1) / page_size
     if pageCount <= 0:
         pageCount = 1
     lastPage = True
@@ -449,7 +450,8 @@ def getPagingAPPConfigList(rq):
         endPos = startPos + page_size
     dicts = APPConfig.objects.all()[startPos:endPos]
     total = APPConfig.objects.count()
-    pageCount = total / page_size
+    #pageCount = total / page_size
+    pageCount = (total  +  page_size  - 1) / page_size
     if pageCount <=0:
         pageCount = 1
     lastPage = True
@@ -566,7 +568,8 @@ def getPagingAPPChangeByUnConfirm(rq):
         endPos = startPos + page_size
     list = APPChange.objects.filter(confirm_status="0",is_get_task_exe_result=1)[startPos:endPos]
     total = APPChange.objects.filter(confirm_status="0",is_get_task_exe_result=1).count()
-    pageCount = total / page_size
+    #pageCount = total / page_size
+    pageCount = (total  +  page_size  - 1) / page_size
     if pageCount <= 0:
         pageCount = 1
     lastPage = True
@@ -626,7 +629,8 @@ def getPagingAPPChangeByConfirmed(rq):
         filter(app_in_host__icontains=app_in_host).filter(app_name__icontains=app_name).\
         filter(type_id=type_id).filter(change_type=change_type).\
         filter(bak_result__icontains=bak_result).filter(change_time__range=(start_time,end_time)).count()
-    pageCount = total / page_size
+    #pageCount = total / page_size
+    pageCount = (total  +  page_size  - 1) / page_size
     if pageCount <= 0:
         pageCount = 1
     lastPage = True
@@ -903,3 +907,75 @@ def recover_his_version(rq):
             return render_json({'code':True, 'text':'提取结果成功，文件已提取到目录'+recover_path.encode("utf-8")+'下'})
         else:
             return render_json({'code':False, 'text':"提取结果失败，系统异常"})
+
+
+#首页大类统计
+def home_type_count(rq):
+    dicts = Dicts.objects.filter(dict_type="APP_TYPE")
+    list=[]
+    obj={}
+    if dicts != None and len(dicts) > 0:
+        for dict in dicts:
+            dict_count = APPConfig.objects.filter(app_type=dict.id).count()
+            obj["type_id"]=dict.id
+            obj["type_name"]=dict.dict_name
+            obj["change_totle"]=dict_count
+            list.append(copy.deepcopy(obj))
+    return render_json({'code':True, 'text':u"提取结果成功","list":list})
+
+
+#首页柱状图统计
+def home_chart_count(rq):
+    dicts = Dicts.objects.filter(dict_type="APP_TYPE")
+    list=[]
+    obj={}
+    if dicts != None and len(dicts) > 0:
+        for dict in dicts:
+            obj["type_id"]=dict.id
+            obj["type_name"]=dict.dict_name
+            no_changes=0
+            apps = APPConfig.objects.filter(app_type=dict.id)
+            if apps != None and len(apps) > 0:
+                for app in apps:
+                    listAPPS = APPChange.objects.filter(confirm_status="0",is_get_task_exe_result=1,app_id=app.id)
+                    no_changes += len(listAPPS)
+            obj["no_changes"]=no_changes
+            list.append(copy.deepcopy(obj))
+    return render_json({'code':True, 'text':u"提取结果成功","list":list}) 
+
+
+#首页柱状图统计最近一个月
+def home_chart_count_time(rq):
+    end_date = datetime.datetime.now()
+    start_date = _last_month(end_date)
+    dicts = Dicts.objects.filter(dict_type="APP_TYPE")
+    list=[]
+    obj={}
+    if dicts != None and len(dicts) > 0:
+        for dict in dicts:
+            obj["type_id"]=dict.id
+            obj["type_name"]=dict.dict_name
+            no_changes=0
+            already_change=0
+            apps = APPConfig.objects.filter(app_type=dict.id)
+            if apps != None and len(apps) > 0:
+                for app in apps:
+                    listAPPS = APPChange.objects.filter(confirm_status="0",is_get_task_exe_result=1,app_id=app.id).\
+                    filter(bak_time__range=(start_date, end_date)).count()
+                    lists = APPChange.objects.filter(confirm_status="1",is_get_task_exe_result=1,app_id=app.id).\
+                    filter(bak_time__range=(start_date, end_date)).count()
+                    no_changes += listAPPS
+                    already_change += lists
+            obj["no_changes"]=no_changes
+            obj["already_change"]=already_change
+            list.append(copy.deepcopy(obj))
+    return render_json({'code':True, 'text':u"提取结果成功","list":list})  
+
+def _last_month(now_time):
+    last_month = now_time.month - 1
+    last_year = now_time.year
+    if last_month == 0:
+        last_month = 12
+        last_year -= 1
+    month_time = datetime.datetime(month=last_month, year=last_year, day=now_time.day)
+    return month_time     

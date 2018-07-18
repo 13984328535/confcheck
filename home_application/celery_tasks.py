@@ -371,14 +371,14 @@ def load_app_check_result_task():
                     if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
                         app_last_bak_time=chg_rel[0].bak_time
                         APPChangeTask.objects.filter(task_id=task_instance_id).\
-                        update(check_result=u"文件发生变化，脚本未执行结束"
+                        update(check_result=u"正在校验，脚本未执行结束"
                                ,check_time=ipLogContent.get('startTime')
                                ,is_get_task_exe_result=is_get_task_exe_result
                                ,bak_result=u"失败"
                                ,app_last_bak_time=app_last_bak_time)
                     else:
                         APPChangeTask.objects.filter(task_id=task_instance_id).\
-                        update(check_result=u"文件发生变化，脚本未执行结束"
+                        update(check_result=u"正在校验，脚本未执行结束"
                                ,check_time=ipLogContent.get('startTime')
                                ,is_get_task_exe_result=is_get_task_exe_result
                                ,bak_result=u"失败"
@@ -389,14 +389,14 @@ def load_app_check_result_task():
                     if chg_rel != None and len(chg_rel) > 0:#文件已存在备份记录
                         app_last_bak_time=chg_rel[0].bak_time
                         APPChangeTask.objects.filter(task_id=task_instance_id).\
-                        update(check_result=u"文件发生变化，脚本执行异常"
+                        update(check_result=u"脚本执行返回未知异常"
                                ,check_time=ipLogContent.get('startTime')
                                ,is_get_task_exe_result=exeStatus
                                ,bak_result=u"失败"
                                ,app_last_bak_time=app_last_bak_time)
                     else:
                         APPChangeTask.objects.filter(task_id=task_instance_id).\
-                        update(check_result=u"文件发生变化，脚本执行异常"
+                        update(check_result=u"脚本执行返回未知异常"
                                ,check_time=ipLogContent.get('startTime')
                                ,is_get_task_exe_result=exeStatus
                                ,bak_result=u"失败"

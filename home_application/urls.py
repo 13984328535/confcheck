@@ -41,4 +41,7 @@ urlpatterns = patterns(
     (r'^get_user_biz/$', 'get_user_biz'),
     (r'^confirmCahngeStatus/$', 'confirmCahngeStatus'),
     (r'^recover_his_version/$', 'recover_his_version'),
+    (r'^home_type_count/$', 'home_type_count'),
+    (r'^home_chart_count/$', 'home_chart_count'),
+    (r'^home_chart_count_time/$', 'home_chart_count_time'),
 )

@@ -6,90 +6,30 @@
 
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="${STATIC_URL}mystatic/bootstrap/css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="${STATIC_URL}mystatic/css/layout.css" />
 		<link rel="stylesheet" type="text/css" href="${STATIC_URL}mystatic/css/home.css" />
 		<link rel="stylesheet" type="text/css" href="${STATIC_URL}mystatic/css/style.css" />
+		<script type="text/javascript" src="${STATIC_URL}mystatic/js/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="${STATIC_URL}mystatic/js/echarts.min.js"></script>
 	</head>
-	<body>
+	<body style="height: 100%; margin: 0">
 		<div class="">
-			<div class="indentify clearfix">
+			<div class="indentify clearfix" style="margin-left: 100px;width: 90%;" align="center">
 				<div class="indentify-class padding-lr clearfix">
-					<ul class="class-content clearfix">
-						<li class="fl margin-large-35">
-							<a class="class-detail fl " href="#">
-								<div class="class-detail-top">
-									<div class="text-center indentify-icon">
-										<img src="${STATIC_URL}mystatic/image/icon-data.png">
-									</div>
-									<h3 class="text-center">
-										数据类
-									</h3>
-									<p class="margin-tb padding-bottom text-justify info">
-										数据信息、数据模型
-									</p>
-								</div>
-								<p class="continue text-big">
-									查看详细
-								</p> 
-							</a>
-						</li>
-						<li class="fl margin-large-35">
-							<a class="class-detail fl " href="#">
-								<div class="class-detail-top">
-									<div class="text-center indentify-icon">
-										<img src="${STATIC_URL}mystatic/image/icon-project.png">
-									</div>
-									<h3 class="text-center">
-										文件类
-									</h3>
-									<p class="margin-tb padding-bottom text-justify info">
-										文件类管理
-									</p>
-								</div>
-								<p class="continue text-big">
-									查看详细
-								</p> 
-							</a>
-						</li>
-						<li class="fl margin-large-35">
-							<a class="class-detail fl " href="#">
-								<div class="class-detail-top">
-									<div class="text-center indentify-icon">
-										<img src="${STATIC_URL}mystatic/image/icon-yy.png">
-									</div>
-									<h3 class="text-center">
-										应用类
-									</h3>
-									<p class="margin-tb padding-bottom text-justify info">
-										应用信息
-									</p>
-								</div>
-								<p class="continue text-big">
-									查看详细
-								</p> 
-							</a>
-						</li>
-						<li class="fl margin-large-35">
-							<a class="class-detail fl " href="#">
-								<div class="class-detail-top">
-									<div class="text-center indentify-icon">
-										<img src="${STATIC_URL}mystatic/image/icon-other.png">
-									</div>
-									<h3 class="text-center">
-										其他
-									</h3>
-									<p class="margin-tb padding-bottom text-justify info">
-										其他
-									</p>
-								</div>
-								<p class="continue text-big">
-									查看详细
-								</p> 
-							</a>
-						</li>
+					<ul class="class-content clearfix" id="iconBox">
+						
 					</ul>
 				</div>
 			</div>
+			<hr>
+			<div class="indentify clearfix" style="height: 350px;">
+				<div id="data_container" style="height: 320px;width: 90%;"></div>
+			</div>
+			<div class="indentify clearfix" style="height: 550px;margin-left: 30px;">
+				<div id="totle_container" style="height: 520px;width: 90%;"></div>
+			</div>
 		</div>
 	</body>
+	<script type="text/javascript" src="${STATIC_URL}mystatic/js/home.js"></script>
 </html>

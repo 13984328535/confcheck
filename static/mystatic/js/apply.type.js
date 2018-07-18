@@ -7,9 +7,10 @@ function updateType(id,name){
 		  	url: window.parent.getRootPath()+"doModifyAppTypeict/",
 		  	data: {"id":id,"name":text},
 		  	success: function(returnData){
+		  		window.parent.hideLayerLoading();
 				returnData = window.parent.parseJsonStr(returnData);
-				layer.msg(returnData.message,{icon: 1,time: 2000});
-				window.parent.triggerClick('Applicationtypemanagement');
+				window.parent.layer.msg(returnData.text,{icon: 1,time: 2000});
+				window.parent.triggerClick('Applicationtypemanagement',1000);
 			},
 		  	dataType: 'json'
 		});
@@ -26,9 +27,10 @@ function deleteType(id,name){
 		  	url: window.parent.getRootPath()+"doDelAppTypeDict/",
 		  	data: {"id":id},
 		  	success: function(returnData){
+		  		window.parent.hideLayerLoading();
 				returnData = window.parent.parseJsonStr(returnData);
-				layer.msg(returnData.message,{icon: 1,time: 2000});
-				window.parent.triggerClick('Applicationtypemanagement');
+				window.parent.layer.msg(returnData.text,{icon: 1,time: 2000});
+				window.parent.triggerClick('Applicationtypemanagement',1000);
 			},
 		  	dataType: 'json'
 		});
@@ -45,9 +47,10 @@ function addInfo(){
 		  	 url: window.parent.getRootPath()+"doAddAPPTypeDict/",
 		  	 data: {"name":text},
 		  	 success: function(returnData){
+		  		window.parent.hideLayerLoading();
 				returnData = window.parent.parseJsonStr(returnData);
-			 	layer.msg(returnData.message,{icon: 1,time: 2000});
-			 	window.parent.triggerClick('Applicationtypemanagement');
+				window.parent.layer.msg(returnData.text,{icon: 1,time: 2000});
+				window.parent.triggerClick('Applicationtypemanagement',1000);
 			 },
 		  	 dataType: 'json'
 		  });

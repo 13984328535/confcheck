@@ -14,9 +14,10 @@ function saveVersion(){
 	  	url: window.parent.getRootPath()+"confirmCahngeStatus/",
 	  	data: param,
 	  	success: function(returnData){
+	  		window.parent.hideLayerLoading();
 			returnData = window.parent.parseJsonStr(returnData);
-			layer.msg(returnData.message,{icon: 1,time: 2000});
-			window.parent.triggerClick('Versionchangeconfirmation');
+			window.parent.layer.msg(returnData.text,{icon: 1,time: 2000});
+			window.parent.triggerClick('Versionchangeconfirmation',1000);
 		},
 	  	dataType: 'json'
 	});

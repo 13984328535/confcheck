@@ -1,4 +1,4 @@
-var busy_arr,select_busy,updateApplyId,_update_type,update_type_sel;
+var busy_arr,select_busy,updateApplyId,_update_type,update_type_sel,_home_click=false,_home_click_id,_apply_m_query=false;
 function showLayerLoading(con,time){
 	layer.msg(con,{icon: 16,shade: 0.2,time: time});
 }
@@ -16,9 +16,11 @@ function parseJsonStr(con){
 	//return JSON.parse(con);
 	return con;
 }
-function triggerClick(_id){
-	var _new_id="#"+_id;
-	$(_new_id).trigger("click");
+function triggerClick(_id,_time){
+	setTimeout(function(){
+		var _new_id="#"+_id;
+		$(_new_id).trigger("click");
+	},_time);
 }
 function getRootPath() {
 	/*var pathName = window.location.pathname.substring(1);

@@ -9,7 +9,7 @@ body{font-family: 'Lantinghei SC','microsoft yahei', Tahoma, Helvetica, SimSun, 
 .view-topbar {position: relative; position: fixed;  width: 100%; min-width: 640px; height: 50px; background: #2a94de; z-index: 101; }
 .view-body { position: absolute; width: 100%; min-width: 1200px; top: 50px; bottom: 0px; background-color: #000; }
 .view-body .view-sidebar { position: fixed; top: 50px; bottom: 0px; background-color: #293038; z-index: 102; }
-.view-product { width: auto; position: absolute; top: 0px; left: 180px; bottom: 0px; right: 0px;padding-bottom:50px;overflow: auto; background: #FFF; }
+.view-product { width: auto; position: absolute; top: 0px; left: 180px; bottom: 0px; right: 0px;padding-bottom:0px;overflow: auto; background: #FFF; }
 #main-frame { width: 100%; height: 100%;}
 .view-topbar .topbar-btn { color: #fff; font-size: 14px; line-height: 50px; }
 .view-topbar .topbar-btn:hover, .view-topbar .topbar-btn.topbar-btn-dark { background: #1380cb; }
@@ -17,10 +17,10 @@ body{font-family: 'Lantinghei SC','microsoft yahei', Tahoma, Helvetica, SimSun, 
 .dropdown { position: relative; }
 .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; float: left; min-width: 160px; font-size: 12px; list-style: none; background-color: #fff; border: 1px solid #eee; -webkit-box-shadow: 0 1px 3px #e5e5e5; -moz-box-shadow: 0 1px 3px #e5e5e5; box-shadow: 0 1px 3px #e5e5e5; z-index: 1000; }
 
-/*框架头部内容*/
+/*框架头部内容  border-right: 1px solid #008fbf;*/
 .tobar-head { width: 180px; }
-.tobar-head .topbar-logo { display: block; padding: 15px; width: 50px; height: 50px; background: #097ac8; }
-.topbar-console .topbar-home-link { width: 130px; border-right: 1px solid #008fbf; }
+.tobar-head .topbar-logo { display: block; padding: 0px; width: 50px; height: 50px; }
+.topbar-console .topbar-home-link { width: 130px;  }
 .topbar-info { position: absolute; right: 0; top: 0; background: #008fbf; }
 .topbar-info .topbar-notice { position: relative; margin-left: 1px; padding: 0 20px; }
 .topbar-info .topbar-notice .icon-notice { float: left; margin: 17px 5px 17px 0; }
@@ -28,7 +28,6 @@ body{font-family: 'Lantinghei SC','microsoft yahei', Tahoma, Helvetica, SimSun, 
 .topbar-info .topbar-notice .topbar-num.have { color: #fff; background: #f90; }
 .topbar-info .topbar-info-item { margin-left: 1px; }
 .view-topbar .topbar-info .topbar-btn { padding: 0 10px; height: 50px; display: block; z-index: 2; background: #2a94de; }
-.topbar-info .topbar-btn:hover,.topbar-info .topbar-btn.topbar-btn-dark { background: #1380cb; }
 .topbar-info .dropdown-menu { width: 100%; z-index: 1; }
 .topbar-info .icon-arrow-down { float: right; margin: 17px 0 17px 5px; }
 .topbar-info .dropdown-menu { width: 100%; min-width: 0px; margin-top: -1px; }
@@ -61,7 +60,7 @@ body{font-family: 'Lantinghei SC','microsoft yahei', Tahoma, Helvetica, SimSun, 
 .show-side .bottom {background-position: right bottom;}
 .ico-left {position: absolute;right: -15px;top: 50%;margin-top: -20px;width: 15px;height: 50px;background: url(../images/show_side.png) no-repeat left top;}
 .close-left {background-position: -24px top;}
-
+.menu-left{margin-left: 15px;}
 /*head*/
 .manage-head{border-bottom:1px solid #d9dfe4;padding:15px 0;margin:0 20px;}
 .manage-head-con{position:relative;height:18px;line-height:18px;color:#363636;border-left:2px solid #0098cd;font-size:16px;}
@@ -153,7 +152,7 @@ label{cursor: pointer;}
 .margin-left-100{margin-left: 130px;}
 .margin-right-75{margin-right:75px;}
 .margin-super-top{margin-top:50px;}
-.margin-large-35{margin-right:35px;}
+.margin-large-35{margin-right:35px;margin-bottom: 10px;}
 .margin-top-35{margin-top:35px;}
 .margin-top-25{margin-top:25px;}
 .margin-tb-25{margin:25px 0;}

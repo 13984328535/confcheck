@@ -177,9 +177,10 @@ function updateApplyInfo(){
 	  	url: window.parent.getRootPath()+"doModifyAPPConfig/",
 	  	data: params,
 	  	success: function(returnData){
+	  		window.parent.hideLayerLoading();
 			returnData = window.parent.parseJsonStr(returnData);
-			layer.msg(returnData.message,{icon: 1,time: 2000});
-			window.parent.triggerClick('Applicationinformationmanagement');
+			window.parent.layer.msg(returnData.text,{icon: 1,time: 2000});
+			window.parent.triggerClick('Applicationinformationmanagement',1000);
 		},
 	  	dataType: 'json'
 	});

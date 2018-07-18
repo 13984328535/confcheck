@@ -10,7 +10,8 @@ See the License for the specific language governing permissions and limitations 
 """
 
 # from django.db import models
-
+import os,django
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "confcheck.settings")# project_name 项目名称
 from django.db import models
 #字典模型
 class Dicts (models.Model):

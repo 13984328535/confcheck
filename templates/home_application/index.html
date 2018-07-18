@@ -17,10 +17,12 @@
 		<div class="view-topbar">
 			<div class="topbar-console">
 				<div class="tobar-head fl">
-					<a href="javascript:void(0);" class="topbar-logo fl">
-					<span><img src="${STATIC_URL}mystatic/image/logo.png" width="20" height="20"/></span>
-					</a>
-					<a href="" class="topbar-home-link topbar-btn text-center fl"><span>管理控制台</span></a>
+					<span class="topbar-logo fl">
+						<img src="${STATIC_URL}mystatic/image/logo.png" width="50" height="50"/>
+					</span>
+					<span class="topbar-home-link text-center fl" style="color: #fff;font-size: 14px;line-height: 50px;">
+						重点文件核查系统
+					</span>
 				</div>
 			</div>
 			<div class="topbar-info">
@@ -32,8 +34,7 @@
 						<span class="icon-arrow-down"></span>
 						</a>
 						<ul class="dropdown-menu" id="dropdown_busy">
-							<li><a href="javascript:void(0);" name="">业务B</a></li>
-							<li><a href="javascript:void(0);">业务C</a></li>
+							<li><a href="javascript:void(0);" name="">业务</a></li>
 						</ul>
 					</div>
 					</li>
@@ -56,22 +57,30 @@
 				<div class="sidebar-content">
 					<div class="sidebar-nav">
 						<div class="sidebar-title">
+							<a href="">
+								<span class="icon"></span>
+								<span class="text-normal">首页</span>
+							</a>
+						</div>
+					</div>
+					<div class="sidebar-nav">
+						<div class="sidebar-title">
 							<a href="javascript:void(0);">
 								<span class="icon"><b class="fl icon-arrow-down"></b></span>
 								<span class="text-normal">应用信息设置</span>
 							</a>
 						</div>
 						<ul class="sidebar-trans">
-							<li>
-								<a href="${SITE_URL}apply_manage/" target="mainFrame">
-									<b class="sidebar-icon"><img src="${STATIC_URL}mystatic/image/icon-apply-info.png" width="16" height="16" /></b>
-									<span class="text-normal" id="Applicationinformationmanagement">应用信息管理</span>
-								</a>
-							</li>
-							<li>
+							<li class="menu-left">
 								<a href="${SITE_URL}apply_type/" target="mainFrame">
 									<b class="sidebar-icon"><img src="${STATIC_URL}mystatic/image/icon-apply-manage.png" width="16" height="16" /></b>
 									<span class="text-normal" id="Applicationtypemanagement">应用类型管理</span>
+								</a>
+							</li>
+							<li class="menu-left">
+								<a href="${SITE_URL}apply_manage/" target="mainFrame">
+									<b class="sidebar-icon"><img src="${STATIC_URL}mystatic/image/icon-apply-info.png" width="16" height="16" /></b>
+									<span class="text-normal" id="Applicationinformationmanagement">应用信息管理</span>
 								</a>
 							</li>
 						</ul>
@@ -84,13 +93,13 @@
 							</a>
 						</div>
 						<ul class="sidebar-trans">
-							<li>
+							<li class="menu-left">
 								<a href="${SITE_URL}apply_version_manage/" target="mainFrame">
 									<b class="sidebar-icon"><img src="${STATIC_URL}mystatic/image/icon-type-change-sure.png" width="16" height="16" /></b>
 									<span class="text-normal" id="Versionchangeconfirmation">版本变化确认</span>
 								</a>
 							</li>
-							<li>
+							<li class="menu-left">
 								<a href="${SITE_URL}apply_version_query/" target="mainFrame">
 									<b class="sidebar-icon"><img src="${STATIC_URL}mystatic/image/icon-type-change-query.png" width="16" height="16" /></b>
 									<span class="text-normal" id="Versionchangequery">版本变化查询</span>

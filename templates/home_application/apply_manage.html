@@ -21,6 +21,31 @@
   	<div class="manage-head">
 		<h6 class="padding-left manage-head-con text-sub">应用信息管理</h6>
 	</div>
+	<div class="manage-head" style="height: 60px;border: 0px;">
+  		<form class="form-inline" role="form">
+  			<table>
+  				<tr style="padding-bottom: 5px;">
+	  				<td>
+	  					<div class="form-group">
+					      <label style="font-size: 14px; width: 60px;">应用名称:</label>
+					      <input type="text" class="form-control" id="appName" placeholder="请输入应用名称">
+					    </div>
+	  				</td>
+	  				<td>
+	  					<div class="form-group" style="margin-left: 20px;">
+					      <label style="font-size: 14px; width: 60px;">主机IP:</label>
+					      <input type="text" class="form-control" id="appIp" placeholder="请输入主机IP">
+					    </div>
+	  				</td>
+	  				<td>
+	  					<div class="form-group" style="margin-left: 20px;">
+					      <input type="button" class="btn btn-info" onclick="searchApplyInfo();" value="查询"/>
+					    </div>
+	  				</td>
+  				</tr>
+  			</table>
+		</form>
+	</div>
     <!-- HTML代码、服务端内容填充 -->
 	<div class="queryBox" style="margin: 10px 10px 10px 10px;">
 	<!-- 定义表格框架 -->
@@ -31,6 +56,8 @@
 					<th>ID</th>
 					<th>应用名称</th>
 					<th>应用所属主机</th>
+					<th>应用类型</th>
+					<th>检查周期(单位)</th>
 					<th>应用状态</th>
 					<th>创建人</th>
 					<th>创建时间</th>

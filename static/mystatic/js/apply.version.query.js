@@ -25,57 +25,10 @@ $(function(){
 		 elem: '#checkTime'
 		 ,range: true
 	});
-	var queryUrl=window.parent.getRootPath()+"getPagingAPPChangeByConfirmed/";
-	$('#page3').scroPage({
-	    url : queryUrl,
-	    asyncLoad : true,
-	    asyncType : 'GET',
-	    serverSidePage : false,
-	    render : function(data){
-	    	var tb = $('#dataGridTableJson tbody');
-	    	$(tb).empty();
-	    	window.parent.hideLayerLoading();
-	    	if(data && data.list && data.list.length > 0){
-	    		$.each(data.list,function(i,row){
-	    			var tr = $('<tr>');
-	    			$(tr).append('<td>'+row.app_id+'</td>');
-	    			$(tr).append('<td title='+row.app_name+'>'+window.parent.strShowManage(row.app_name,9)+'</td>');
-	    			$(tr).append('<td>'+row.app_in_host+'</td>');
-	    			$(tr).append('<td title='+row.change_file+'>'+window.parent.strShowManage(row.change_file,9)+'</td>');
-	    			$(tr).append('<td title='+row.bak_path+'>'+window.parent.strShowManage(row.bak_path,9)+'</td>');
-	    			$(tr).append('<td title='+row.bak_result+'>'+window.parent.strShowManage(row.bak_result,9)+'</td>');
-	    			$(tr).append('<td>'+row.app_last_bak_time+'</td>');
-	    			if(row.change_type==0){
-	    				$(tr).append('<td>未知</td>');
-	    			}else if(row.change_type==1){
-	    				$(tr).append('<td>上线变化</td>');
-	    			}else if(row.change_type==2){
-	    				$(tr).append('<td>受控变化</td>');
-	    			}else if(row.change_type==3){
-	    				$(tr).append('<td>异常变化</td>');
-	    			}else{
-	    				$(tr).append('<td></td>');
-	    			}
-	    			$(tr).append('<td>'+row.check_time+'</td>');
-	    			$(tr).append('<td title='+row.confirm_mark+'>'+window.parent.strShowManage(row.confirm_mark,9)+'</td>');
-	    			$(tr).append('<td>'+row.confirm_time+'</td>');
-	    			$(tr).append('<td><input type="button" value="提取" onclick="getInfo(\''+row.id+'\',\''+row.app_name+'\',\''+row.bak_result+'\');" class="button" style="margin-left: 15px;"/></td>');
-	    			$(tb).append(tr);
-	    		});
-	    	}
-	    	$("#pagerAddBtn").hide();
-	    },
-	    params : function(){
-	        return {
-	        	appName : $("#appName").val(),
-	        	appIp : $("#appIp").val(),
-	        	checkTime : $("#checkTime").val(),
-	        	applyType : $("#applyType").val(),
-	        	changeResult : $("#changeResult").val(),
-	        	changeType : $("#changeType").val()
-	        };
-	    }
-	});
+	if(window.parent._apply_m_query){
+		window.parent._apply_m_query=false;
+		searchVersion();
+	}
 });
 function getInfo(id,name,result){
 	if(result != "成功"){
@@ -123,7 +76,7 @@ function searchVersion(){
 	$('#page3').scroPage({
 	    url : queryUrl,
 	    asyncLoad : true,
-	    asyncType : 'GET',
+	    asyncType : 'POST',
 	    serverSidePage : false,
 	    render : function(data){
 	    	var tb = $('#dataGridTableJson tbody');
@@ -135,8 +88,9 @@ function searchVersion(){
 	    			$(tr).append('<td>'+row.app_id+'</td>');
 	    			$(tr).append('<td title='+row.app_name+'>'+window.parent.strShowManage(row.app_name,9)+'</td>');
 	    			$(tr).append('<td>'+row.app_in_host+'</td>');
-	    			$(tr).append('<td title='+row.change_file+'>'+window.parent.strShowManage(row.change_file,9)+'</td>');
-	    			$(tr).append('<td title='+row.bak_path+'>'+window.parent.strShowManage(row.bak_path,9)+'</td>');
+	    			$(tr).append('<td>'+row.app_type+'</td>');
+	    			$(tr).append('<td title='+row.app_name+'>'+window.parent.strShowManage(row.change_file,9)+'</td>');
+	    			$(tr).append('<td title='+row.file_bak_path+'>'+window.parent.strShowManage(row.file_bak_path,9)+'</td>');
 	    			$(tr).append('<td title='+row.bak_result+'>'+window.parent.strShowManage(row.bak_result,9)+'</td>');
 	    			$(tr).append('<td>'+row.app_last_bak_time+'</td>');
 	    			if(row.change_type==0){
@@ -153,7 +107,7 @@ function searchVersion(){
 	    			$(tr).append('<td>'+row.check_time+'</td>');
 	    			$(tr).append('<td title='+row.confirm_mark+'>'+window.parent.strShowManage(row.confirm_mark,9)+'</td>');
 	    			$(tr).append('<td>'+row.confirm_time+'</td>');
-	    			$(tr).append('<td><input type="button" value="提取" onclick="getInfo(\''+row.id+'\',\''+row.app_name+'\',\''+row.bak_result+'\');" class="button" style="margin-left: 15px;"/></td>');
+	    			$(tr).append('<td><input type="button" value="提取" onclick="getInfo(\''+row.id+'\',\''+row.app_name+'\');" class="button" style="margin-left: 15px;"/></td>');
 	    			$(tb).append(tr);
 	    		});
 	    	}
