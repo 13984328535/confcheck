@@ -284,7 +284,7 @@ def load_app_check_result_task():
                                                          ,app_name=cfg_task[0].app_name
                                                          ,app_type=cfg_task[0].app_type
                                                          ,type_id=cfg_task[0].type_id,change_file=cfg_task[0].change_file
-                                                         ,app_last_bak_time=datetime.datetime.strptime(chg_rel[0].bak_time,"%Y-%m-%d %H:%M:%S")
+                                                         ,app_last_bak_time=chg_rel[0].bak_time
                                                          ,bak_time=time.strftime("%Y-%m-%d %H:%M:%S",ipLogContent.get('startTime'))
                                                          ,bak_result=u"成功"
                                                          ,bak_path=obj.bak_path
