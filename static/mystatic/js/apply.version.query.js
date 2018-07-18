@@ -4,6 +4,7 @@ $(function(){
 		type: 'GET',
 		url: window.parent.getRootPath()+"getDictByType?dict_type=APP_TYPE",
 		data: null,
+		async:false,
 		success: function(returnData){
 			returnData = window.parent.parseJsonStr(returnData);
 			var tb = $('#applyType');
@@ -11,7 +12,12 @@ $(function(){
 			if(returnData.code && returnData.list.length > 0){
 				$(tb).append('<option value="0" selected="selected">-全部-</option>');
 				$.each(returnData.list,function(i,row){
-					var tr = $('<option value="'+row.id+'">');
+					var tr;// = $('<option value="'+row.id+'">');
+					if(window.parent._home_click&&window.parent._home_click_id==row.id){
+						tr = $('<option selected="selected" value="'+row.id+'">');
+					}else{
+						tr = $('<option value="'+row.id+'">');
+					}
 					$(tr).append(row.dict_name);
 					$(tr).append('</option>');
 					$(tb).append(tr);

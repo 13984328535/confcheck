@@ -621,14 +621,30 @@ def getPagingAPPChangeByConfirmed(rq):
         list = APPChange.objects.filter(confirm_status="1",is_get_task_exe_result=1)[startPos:endPos]
         total = APPChange.objects.filter(confirm_status="1",is_get_task_exe_result=1).count()
     else:
-        list = APPChange.objects.filter(confirm_status="1",is_get_task_exe_result=1).\
-        filter(app_in_host__icontains=app_in_host).filter(app_name__icontains=app_name).\
-        filter(type_id=type_id).filter(change_type=change_type).\
-        filter(bak_result__icontains=bak_result).filter(change_time__range=(start_time,end_time))[startPos:endPos]
-        total = APPChange.objects.filter(confirm_status="1",is_get_task_exe_result=1).\
-        filter(app_in_host__icontains=app_in_host).filter(app_name__icontains=app_name).\
-        filter(type_id=type_id).filter(change_type=change_type).\
-        filter(bak_result__icontains=bak_result).filter(change_time__range=(start_time,end_time)).count()
+        searchCondition = {'confirm_status':"1","is_get_task_exe_result":1}#'md5__icontains' : md5 ,'filename__icontains':filename
+        if app_in_host != "" and app_in_host !=None:
+            searchCondition['app_in_host__icontains']=app_in_host
+        if app_name != "" and app_name !=None:
+            searchCondition['app_name__icontains']=app_name
+        if bak_result != "" and bak_result !=None:
+            searchCondition['bak_result__icontains']=bak_result
+        if type_id != 0 and type_id !=None:
+            searchCondition['type_id']=type_id
+        if changeType != 0 and changeType !=None:
+            searchCondition['change_type']=changeType
+        #if start_time != 
+        kwargs = getKwargs(searchCondition)
+        list = APPChange.objects.filter(**kwargs)
+        #list = APPChange.objects.filter(confirm_status="1",is_get_task_exe_result=1).\
+        #filter(app_in_host__icontains=app_in_host).filter(app_name__icontains=app_name).\
+        #filter(type_id=type_id).filter(change_type=change_type).\
+        #filter(bak_result__icontains=bak_result).filter(change_time__range=(start_time,end_time))[startPos:endPos]
+        
+        total = APPChange.objects.filter(**kwargs).count()
+        #total = APPChange.objects.filter(confirm_status="1",is_get_task_exe_result=1).\
+        #filter(app_in_host__icontains=app_in_host).filter(app_name__icontains=app_name).\
+        #filter(type_id=type_id).filter(change_type=change_type).\
+        #filter(bak_result__icontains=bak_result).filter(change_time__range=(start_time,end_time)).count()
     #pageCount = total / page_size
     pageCount = (total  +  page_size  - 1) / page_size
     if pageCount <= 0:
@@ -645,6 +661,15 @@ def getPagingAPPChangeByConfirmed(rq):
                         ,'list':  convert_objs_to_dicts(list)
                         ,"firstPage":firstPage,"lastPage":lastPage})
     
+
+# 获取动态过滤条件
+def getKwargs(data={}):
+   kwargs = {}
+   for (k , v)  in data.items() :
+       if v is not None and v != u'' :
+           kwargs[k] = v          
+   return kwargs
+
 
 #根据id查询变更记录
 def getChangeByid(rq):
