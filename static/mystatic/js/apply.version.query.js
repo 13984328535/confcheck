@@ -76,7 +76,7 @@ function searchVersion(){
 	$('#page3').scroPage({
 	    url : queryUrl,
 	    asyncLoad : true,
-	    asyncType : 'POST',
+	    asyncType : 'GET',
 	    serverSidePage : false,
 	    render : function(data){
 	    	var tb = $('#dataGridTableJson tbody');
