@@ -83,7 +83,7 @@ class APPChangeTask (models.Model):
     app_id=models.IntegerField(u"应用ID")
     app_in_host=models.CharField(u"应用所属主机",max_length=255)
     app_name=models.CharField(u"应用名称",max_length=255)
-    app_type=models.CharField(u"应用类型",max_length=255)
+    app_type=models.CharField(u"应用类型",max_length=255) 
     type_id=models.IntegerField(u"类型ID")
     change_type=models.IntegerField(u"变更类型",null=True,blank=True)
     change_file=models.CharField(u"变更文件",max_length=1000,null=True,blank=True)
