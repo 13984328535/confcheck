@@ -54,15 +54,35 @@ function getInfo(id,name,result){
 		  	data: {"id":id,"name":name},
 		  	success: function(returnData){
 		  		window.parent.hideLayerLoading();
-		  		debugger
 				returnData = window.parent.parseJsonStr(returnData);
-				debugger
-				if(returnData.code){
+				/*if(returnData.code){
 					layer.msg(returnData.text,{icon: 1,time: 6000});
 				}else{
 					layer.msg(returnData.text,{icon: 2,time: 6000});
-				}
-				//window.parent.triggerClick('Versionchangequery');
+				}*/
+				if(returnData.code){
+		  			var con="<div style='font-size:14px;margin-left:15px;margin-top:8px;'><b>"+returnData.text+"</b></div>"+
+			  		"<div style='font-size:14px;margin-left:15px;margin-top:8px;'><b>IP:<span style='color:red'>"+returnData.IP+"</span></b></div>"+
+			  		"<div style='font-size:14px;margin-left:15px;margin-top:8px;'><b>路径:<span style='color:red'>"+returnData.path+"</span></b></div>";
+					var index = parent.layer.open({
+						type: 1,
+						title: name+'  提取结果',
+						maxmin: false,
+						scrollbar: false,
+						area: ['350px', '200px'],
+						content: con
+					});
+		  		}else{
+		  			var con="<div style='font-size:14px;margin-left:15px;margin-top:8px;'><b>"+returnData.text+"</b></div>";
+					var index = parent.layer.open({
+						type: 1,
+						title: name+'  提取结果',
+						maxmin: false,
+						scrollbar: false,
+						area: ['250px', '150px'],
+						content: con
+					});
+		  		}
 			},
 		  	dataType: 'json'
 		});

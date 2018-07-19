@@ -348,7 +348,7 @@ def doAddAPPConfig(request):
     ret_code = True
     try:
         APPConfig.objects.create(app_name=app_name,app_host_ip=app_host_ip
-                             ,app_type=app_type,app_biz_id=app_biz_id
+                             ,app_type_id=app_type,app_biz_id=app_biz_id
                              ,host_os_type=host_os_type,host_source=host_source
                              ,app_biz_name=app_biz_name
                              ,app_config_file_path=app_config_file_path
@@ -497,12 +497,12 @@ def convert_objs_to_dicts(model_obj):
                 if type(fieldValue) is datetime.date or type(fieldValue) is datetime.datetime:
     #                     fieldValue = fieldValue.isoformat()
                     fieldValue = datetime.datetime.strftime(fieldValue, '%Y-%m-%d %H:%M:%S')
-                # 没想好外键与cache字段的解决办法
-#                 if hasattr(fieldValue, "__dict__"):
-#                     fieldValue = convert_obj_to_dicts(model_obj)
+                #外键与cache字段的解决办法
+                #if hasattr(fieldValue, "__dict__"):
+                #     fieldValue = convert_obj_to_dicts(fieldValue)
             
                 setattr(obj, fieldName, fieldValue)
-#                 print fieldName, "\t", fieldValue
+                #print fieldName, "\t", fieldValue
             except Exception, ex:
                 print ex
                 pass
@@ -940,9 +940,9 @@ def recover_his_version(rq):
         elif exitCode == 2:#校验配置文件不存在
             return render_json({'code':False, 'text':'提取结果失败，文件'+bak_file_dir.encode("utf-8")+'不存在'})
         elif exitCode == 0:#拷贝成功
-            return render_json({'code':True, 'text':'提取结果成功，文件已提取到目录'+recover_path.encode("utf-8")+'下'})
+            return render_json({'code':True, 'text':'提取结果成功，文件'+bak_file_dir.encode("utf-8")+'已提取','IP':app.app_host_ip,'path':recover_path})
         else:
-            return render_json({'code':False, 'text':"提取结果失败，系统异常"})
+            return render_json({'code':False, 'text':"提取结果失败，系统异常",'IP':app.app_host_ip,'path':recover_path})
 
 
 #首页大类统计
