@@ -103,7 +103,7 @@ function searchVersion(){
 	    			$(tr).append('<td>'+row.app_in_host+'</td>');
 	    			$(tr).append('<td>'+row.app_type+'</td>');
 	    			$(tr).append('<td title='+row.app_name+'>'+window.parent.strShowManage(row.change_file,9)+'</td>');
-	    			$(tr).append('<td title='+row.file_bak_path+'>'+window.parent.strShowManage(row.file_bak_path,9)+'</td>');
+	    			$(tr).append('<td title='+row.bak_path+'>'+window.parent.strShowManage(row.file_bak_path,9)+'</td>');
 	    			$(tr).append('<td title='+row.bak_result+'>'+window.parent.strShowManage(row.bak_result,9)+'</td>');
 	    			$(tr).append('<td>'+row.app_last_bak_time+'</td>');
 	    			if(row.change_type==0){
