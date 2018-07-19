@@ -619,6 +619,8 @@ def getPagingAPPChangeByConfirmed(rq):
     changeResult = int(rq.GET.get("changeResult"))
     checkTime = rq.GET.get("checkTime")
     bak_result=""
+    start_time=""
+    end_time=""
     if checkTime != "":
         start_time=checkTime.split("~")[0]
         end_time=checkTime.split("~")[1]
@@ -643,7 +645,7 @@ def getPagingAPPChangeByConfirmed(rq):
             searchCondition['type_id']=type_id
         if changeType != 0 and changeType !=None:
             searchCondition['change_type']=changeType
-        if start_time != "" and end_time !="":
+        if start_time != None and start_time != "" and end_time != None and end_time !="":
             searchCondition['change_time__range']=(start_time,end_time)#####
         #if start_time != 
         kwargs = getKwargs(searchCondition)
