@@ -61,7 +61,7 @@ function searchApplyInfo(){
 	    			$(tr).append('<td>'+row.id+'</td>');
 	    			$(tr).append('<td>'+row.app_name+'</td>');
 	    			$(tr).append('<td>'+row.app_host_ip+'</td>');
-	    			$(tr).append('<td>'+row.app_type+'</td>');
+	    			//$(tr).append('<td>'+row.app_type+'</td>');
 	    			if(row.app_check_unit=='day'){
 	    				$(tr).append('<td>'+row.app_check_cycle+'(天)</td>');
 	    			}else if(row.app_check_unit=='hour'){
