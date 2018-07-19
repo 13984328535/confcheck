@@ -77,6 +77,7 @@ $(function(){
 	    			$(tb).append(tr);
 	    		});
 	    	}
+	    	$("#pagerAddBtn").show();
 	    },
 	    params : function(){
 	        return {

@@ -23,6 +23,7 @@ $(function(){
 					$(tb).append(tr);
 				});
 			}
+			window.parent._home_click=false;
 		},
 		dataType: 'json'
 	});
@@ -85,6 +86,7 @@ function searchVersion(){
 	if(checkTimeStr!=null&&checkTimeStr!=''){
 		checkTimeStr=removeAllSpace(checkTimeStr);
 	}
+	$("#checkTimeQuery").val(checkTimeStr);
 	$('#page3').empty();
 	$('#page3').scroPage({
 	    url : queryUrl,
@@ -131,7 +133,7 @@ function searchVersion(){
 	        	appName : $("#appName").val(),
 	        	appIp : $("#appIp").val(),
 	        	applyType : $("#applyType").val(),
-	        	checkTime : checkTimeStr,
+	        	checkTime : $("#checkTimeQuery").val(),
 	        	changeResult : $("#changeResult").val(),
 	        	changeType : $("#changeType").val()
 	        };

@@ -646,7 +646,7 @@ def getPagingAPPChangeByConfirmed(rq):
         if changeType != 0 and changeType !=None:
             searchCondition['change_type']=changeType
         if start_time != None and start_time != "" and end_time != None and end_time !="":
-            searchCondition['bak_time__range']=(start_time,end_time)#####
+            searchCondition['check_time__range']=(datetime.datetime.strptime(start_time,'%Y-%m-%d'),datetime.datetime.strptime(end_time,'%Y-%m-%d'))#####
         #if start_time != 
         kwargs = getKwargs(searchCondition)
         list = APPChange.objects.filter(**kwargs)[startPos:endPos]

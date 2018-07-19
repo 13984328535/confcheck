@@ -82,6 +82,7 @@ function searchApplyInfo(){
 	    			$(tb).append(tr);
 	    		});
 	    	}
+	    	$("#pagerAddBtn").show();
 	    },
 	    params : function(){
 	        return {
