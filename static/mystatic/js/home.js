@@ -64,17 +64,23 @@ $(function() {
 	dataType : 'json'
 	});
 });
+
 function querySkip(id){
 	window.parent._home_click=true;
 	window.parent._home_click_id=id;
 	window.parent._apply_m_query=true;
-	window.parent.triggerClick('Versionchangequery',100);
+	window.parent.triggerClick('Applicationinformationmanagement',100);
 }
 function loadBarInfo(bartitle,nochange,alreadychange) {
 	var dom = document.getElementById("data_container");
 	var myChart = echarts.init(dom);
 	option = null;
 	option = {
+		title: {
+	        text: '当前异动文件未确认情况',
+	        x:'center',
+	        subtext: ''
+	    },
 		color : [ '#C23531'],//, '#91C7AE' ],
 		tooltip : {
 			trigger : 'axis',
@@ -82,9 +88,9 @@ function loadBarInfo(bartitle,nochange,alreadychange) {
 				type : 'shadow'
 			}
 		},
-		legend : {
+		/*legend : {
 			data : [ '未知']//, '已确认' ]
-		},
+		},*/
 		calculable : true,
 		xAxis : [ {
 			type : 'category',
@@ -113,6 +119,9 @@ function loadBarInfo(bartitle,nochange,alreadychange) {
 	if (option && typeof option === "object") {
 		myChart.setOption(option, true);
 	}
+	myChart.on('click',function(a,b){
+		window.parent.triggerClick('Versionchangeconfirmation',100);
+	});
 }
 
 function loadBottomBarInfo(bartitle,nochange,alreadychange){

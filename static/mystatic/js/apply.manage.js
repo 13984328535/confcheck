@@ -42,8 +42,55 @@ function addInfo(){
 	});
 }
 $(function(){
+	$.ajax({
+		type: 'get',
+		url: window.parent.getRootPath()+"getDictByType?dict_type=APP_TYPE",
+		data: null,
+		async:false,
+		success: function(returnData){
+			returnData = window.parent.parseJsonStr(returnData);
+			var tb = $('#applyType');
+			$(tb).empty();
+			if(returnData.code && returnData.list.length > 0){
+				$(tb).append('<option value="0" selected="selected">-全部-</option>');
+				$.each(returnData.list,function(i,row){
+					var tr;
+					if(window.parent._home_click&&window.parent._home_click_id==row.id){
+						tr = $('<option selected="selected" value="'+row.id+'">');
+					}else{
+						tr = $('<option value="'+row.id+'">');
+					}
+					$(tr).append(row.dict_name);
+					$(tr).append('</option>');
+					$(tb).append(tr);
+				});
+			}
+			window.parent._home_click=false;
+		},
+		dataType: 'json'
+	});
 	searchApplyInfo();
 });
+
+function getTypeName(id){
+	msg = "";
+	$.ajax({
+		type: 'get',
+		async:false,
+	  	url: window.parent.getRootPath()+"getDictById/",
+	  	data: {"id":id},
+	  	success: function(returnData){
+	  		debugger
+	  		if(returnData.code){
+	  			data = returnData.list;
+	  			msg = data[0].dict_name;
+	  		}
+		},
+	  	dataType: 'json'
+	});
+	return msg;
+}
+
 function searchApplyInfo(){
 	$('#page3').empty();
 	$('#page3').scroPage({
@@ -61,7 +108,7 @@ function searchApplyInfo(){
 	    			$(tr).append('<td>'+row.id+'</td>');
 	    			$(tr).append('<td>'+row.app_name+'</td>');
 	    			$(tr).append('<td>'+row.app_host_ip+'</td>');
-	    			//$(tr).append('<td>'+row.app_type+'</td>');
+	    			$(tr).append('<td>'+getTypeName(row.app_type)+'</td>');
 	    			if(row.app_check_unit=='day'){
 	    				$(tr).append('<td>'+row.app_check_cycle+'(天)</td>');
 	    			}else if(row.app_check_unit=='hour'){
@@ -86,9 +133,11 @@ function searchApplyInfo(){
 	    },
 	    params : function(){
 	        return {
+	        	applyType:$("#applyType").val(),
 	        	appName:$("#appName").val(),
 	        	appIp:$("#appIp").val()
 	        };
 	    }
 	});
+	
 }

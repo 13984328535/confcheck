@@ -167,14 +167,14 @@ def getDictByType(rq):
     return render_json({'code':True, 'text':"查询数据成功",'list':convert_objs_to_dicts(dicts)})
 
 def getDictById(rq):
-    id=rq.POST.get("id")
+    id=rq.GET.get("id")
     if id == None or id =="":
         return render_json({'code':False, 'text':"ID不能为空"}) 
     try: 
         dict = Dicts.objects.get(id=id)             
     except:
         return render_json({'code':False, 'text':"查询数据出错"})
-    return render_json({'code':False, 'text':ret_text,'list':convert_obj_to_dicts(dict)})
+    return render_json({'code': True, 'text':"查询成功",'list':convert_obj_to_dicts(dict)})
 
 """
 records = {
@@ -348,7 +348,7 @@ def doAddAPPConfig(request):
     ret_code = True
     try:
         APPConfig.objects.create(app_name=app_name,app_host_ip=app_host_ip
-                             ,app_type_id=app_type,app_biz_id=app_biz_id
+                             ,app_type=app_type,app_biz_id=app_biz_id
                              ,host_os_type=host_os_type,host_source=host_source
                              ,app_biz_name=app_biz_name
                              ,app_config_file_path=app_config_file_path
@@ -442,6 +442,7 @@ def getPagingAPPConfigList(rq):
     try:
         app_name = rq.GET.get("appName")
         app_ip = rq.GET.get("appIp")
+        type_id = int(rq.GET.get("applyType"))
         page_size = int(rq.GET.get("pageSize"))
         page_number = int(rq.GET.get("pageNumber"))
     except ValueError:
@@ -455,6 +456,8 @@ def getPagingAPPConfigList(rq):
         searchCondition['app_name__icontains']=app_name
     if app_ip !=None and app_ip != "":
         searchCondition['app_host_ip__icontains']=app_ip
+    if type_id !=None and type_id != 0:
+        searchCondition['app_type']=type_id
     
     kwargs = getKwargs(searchCondition)
     dicts = APPConfig.objects.filter(**kwargs)[startPos:endPos]
