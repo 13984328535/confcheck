@@ -39,7 +39,7 @@ $(function(){
 	}
 });
 function getInfo(id,name,result){
-	if(result != "成功"){
+	if(removeAllSpace(result) != "成功"){
 		layer.msg("版本备份未成功，不能提取历史版本",{icon: 2,time: 5000});
 		return;
 	}
