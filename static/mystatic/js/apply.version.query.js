@@ -30,6 +30,7 @@ $(function(){
 	laydate.render({
 		 elem: '#checkTime'
 		 ,range: true
+		 ,range: '~'
 	});
 	if(window.parent._apply_m_query){
 		window.parent._apply_m_query=false;
@@ -75,9 +76,15 @@ function searchVersionKey(event){
 	  searchVersion();
    }
 }
-
+function removeAllSpace(str) {
+    return str.replace(/\s+/g, "");
+}
 function searchVersion(){
 	var queryUrl=window.parent.getRootPath()+"getPagingAPPChangeByConfirmed/";
+	var checkTimeStr=$("#checkTime").val();
+	if(checkTimeStr!=null&&checkTimeStr!=''){
+		checkTimeStr=removeAllSpace(checkTimeStr);
+	}
 	$('#page3').empty();
 	$('#page3').scroPage({
 	    url : queryUrl,
@@ -124,7 +131,7 @@ function searchVersion(){
 	        	appName : $("#appName").val(),
 	        	appIp : $("#appIp").val(),
 	        	applyType : $("#applyType").val(),
-	        	checkTime : $("#checkTime").val(),
+	        	checkTime : checkTimeStr,
 	        	changeResult : $("#changeResult").val(),
 	        	changeType : $("#changeType").val()
 	        };

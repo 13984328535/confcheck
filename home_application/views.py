@@ -440,6 +440,8 @@ def load_apps_config_cache():
 
 def getPagingAPPConfigList(rq):
     try:
+        app_name = rq.GET.get("appName")
+        app_ip = rq.GET.get("appIp")
         page_size = int(rq.GET.get("pageSize"))
         page_number = int(rq.GET.get("pageNumber"))
     except ValueError:
@@ -448,8 +450,17 @@ def getPagingAPPConfigList(rq):
     if page_number > 0:
         startPos = (page_number-1) * page_size
         endPos = startPos + page_size
-    dicts = APPConfig.objects.all()[startPos:endPos]
-    total = APPConfig.objects.count()
+    searchCondition = {}#'md5__icontains' : md5 ,'filename__icontains':filename
+    if app_name !=None and app_name != "" :
+        searchCondition['app_name__icontains']=app_name
+    if app_ip !=None and app_ip != "":
+        searchCondition['app_host_ip__icontains']=app_ip
+    
+    kwargs = getKwargs(searchCondition)
+    dicts = APPConfig.objects.filter(**kwargs)[startPos:endPos]
+    total = APPConfig.objects.filter(**kwargs).count()
+    #dicts = APPConfig.objects.all()[startPos:endPos]
+    #total = APPConfig.objects.count()
     #pageCount = total / page_size
     pageCount = (total  +  page_size  - 1) / page_size
     if pageCount <=0:
@@ -609,9 +620,9 @@ def getPagingAPPChangeByConfirmed(rq):
     checkTime = rq.GET.get("checkTime")
     bak_result=""
     if checkTime != "":
-        start_time=datetime.datetime(checkTime.split("+-+")[0])
-        end_time=datetime.datetime(checkTime.split("+-+")[1])
-    if changeResult == 1:
+        start_time=checkTime.split("~")[0]
+        end_time=checkTime.split("~")[1]
+    if changeResult == 0:
         bak_result="成功"
     else:
         bak_result="失败"
@@ -632,19 +643,17 @@ def getPagingAPPChangeByConfirmed(rq):
             searchCondition['type_id']=type_id
         if changeType != 0 and changeType !=None:
             searchCondition['change_type']=changeType
+        if start_time != "" and end_time !="":
+            searchCondition['change_time__range']=(start_time,end_time)#####
         #if start_time != 
         kwargs = getKwargs(searchCondition)
-        list = APPChange.objects.filter(**kwargs)
+        list = APPChange.objects.filter(**kwargs)[startPos:endPos]
         #list = APPChange.objects.filter(confirm_status="1",is_get_task_exe_result=1).\
         #filter(app_in_host__icontains=app_in_host).filter(app_name__icontains=app_name).\
         #filter(type_id=type_id).filter(change_type=change_type).\
         #filter(bak_result__icontains=bak_result).filter(change_time__range=(start_time,end_time))[startPos:endPos]
         
         total = APPChange.objects.filter(**kwargs).count()
-        #total = APPChange.objects.filter(confirm_status="1",is_get_task_exe_result=1).\
-        #filter(app_in_host__icontains=app_in_host).filter(app_name__icontains=app_name).\
-        #filter(type_id=type_id).filter(change_type=change_type).\
-        #filter(bak_result__icontains=bak_result).filter(change_time__range=(start_time,end_time)).count()
     #pageCount = total / page_size
     pageCount = (total  +  page_size  - 1) / page_size
     if pageCount <= 0:
