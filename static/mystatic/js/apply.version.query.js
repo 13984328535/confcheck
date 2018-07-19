@@ -122,7 +122,7 @@ function searchVersion(){
 	    			$(tr).append('<td>'+row.check_time+'</td>');
 	    			$(tr).append('<td title='+row.confirm_mark+'>'+window.parent.strShowManage(row.confirm_mark,9)+'</td>');
 	    			$(tr).append('<td>'+row.confirm_time+'</td>');
-	    			$(tr).append('<td><input type="button" value="提取" onclick="getInfo(\''+row.id+'\',\''+row.app_name+'\');" class="button" style="margin-left: 15px;"/></td>');
+	    			$(tr).append('<td><input type="button" value="提取" onclick="getInfo(\''+row.id+'\',\''+row.app_name+'\',\''+row.bak_result+'\');" class="button" style="margin-left: 15px;"/></td>');
 	    			$(tb).append(tr);
 	    		});
 	    	}
