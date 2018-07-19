@@ -922,8 +922,9 @@ def recover_his_version(rq):
     }
     result = client.job.fast_execute_script(kwargs)
     if result['code'] != 0:
+        msg = result['message']
         logger.error(u"执行脚本失败-提取：{}".format(datetime.datetime.now()))
-        return render_json({'code':False, 'text':"提取历史版本失败"})
+        return render_json({'code':False, 'text':"提取历史版本失败："+msg.encode("utf-8")})
     else:
         #脚本执行成功，
         task_instance_id = result['data']['taskInstanceId']
