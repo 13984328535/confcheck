@@ -31,6 +31,8 @@ import os,base64,copy,datetime,re,json
 from django.core.cache import cache
 import time
 
+apps1
+
 #task-work
 @task()
 def async_task_load_app_config():
@@ -69,10 +71,12 @@ celery 周期任务示例
 run_every=crontab(minute='*/10', hour='*', day_of_week="*")：每 10 分钟执行一次任务
 periodic_task：程序运行时自动触发周期任务
 """
-@periodic_task(run_every=crontab(minute='*/30', hour='*', day_of_week="*"))
+@periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
 def exec_app_check_task():
     now = datetime.datetime.now()
     apps = APPConfig.objects.all()
+    global apps1
+    apps1 = apps
     #execute_task()
     #apps = cache.__getattr__("V_CACHE_APPS")
     logger.info(u"加载应用配置缓存数据成功  {}".format(now))
@@ -81,7 +85,7 @@ def exec_app_check_task():
         apps = APPConfig.objects.all()
     logger.info(u"开始校验应用配置，当前时间：{}".format(now))
     #调用校验方法
-    exec_app_check(apps)
+    exec_app_check(apps1)
 
 def exec_app_check(apps):
     now = datetime.datetime.now()
@@ -208,7 +212,7 @@ def redExecFile(file_name):
 """
 上部为校验的task，下部为获取结果的task
 """
-@periodic_task(run_every=crontab(minute='*/30', hour='*', day_of_week="*"))
+@periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
 def load_app_check_result_task():
     now = datetime.datetime.now()
     dicts = APPChangeTask.objects.filter(is_get_task_exe_result=0)
