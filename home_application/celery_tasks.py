@@ -73,10 +73,11 @@ celery 周期任务示例
 run_every=crontab(minute='*/10', hour='*', day_of_week="*")：每 10 分钟执行一次任务
 periodic_task：程序运行时自动触发周期任务
 """
-@periodic_task(run_every=crontab(minute='*/30', hour='*', day_of_week="*"))
+@periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
 def exec_app_check_task():
     now = datetime.datetime.now()
-    execute_task()
+    if apps1 == None or len(apps1) <= 0:
+        execute_task()
     #apps = APPConfig.objects.all()
     #global apps1
     #apps1 = apps
@@ -215,7 +216,7 @@ def redExecFile(file_name):
 """
 上部为校验的task，下部为获取结果的task
 """
-@periodic_task(run_every=crontab(minute='*/30', hour='*', day_of_week="*"))
+@periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
 def load_app_check_result_task():
     now = datetime.datetime.now()
     dicts = APPChangeTask.objects.filter(is_get_task_exe_result=0)
