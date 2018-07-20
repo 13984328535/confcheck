@@ -47,8 +47,10 @@ except:
 #cache
 CACHES = {
  'default': {
-  'BACKEND': 'django.core.cache.backends.db.DatabaseCache',  # 指定缓存使用的引擎
-  'LOCATION': 'appconfig_cache',         # 写在内存中的变量的唯一值 
+  #'BACKEND': 'django.core.cache.backends.db.DatabaseCache',  # 指定缓存使用的引擎
+  #'LOCATION': 'appconfig_cache',         # 写在内存中的变量的唯一值 
+  'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+  'LOCATION': 'c:/foo/bar',     #/var/tmp/django_cache
   'TIMEOUT':None,             # 缓存超时时间(默认为300秒,None表示永不过期)
   'OPTIONS':{
    'MAX_ENTRIES': 10000,           # 最大缓存记录的数量（默认300）

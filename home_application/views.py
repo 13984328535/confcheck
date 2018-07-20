@@ -441,7 +441,8 @@ def doModifyAPPConfig(request):
         appCfg.app_status=app_status
     appCfg.save()
     
-    #apps=cache.get("APPConfig")
+    apps=cache.get("APPConfig")
+    print apps
     #cache.set("APPConfig",APPConfig.objects.all())
     load_apps_config_cache()
     
