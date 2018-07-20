@@ -31,7 +31,7 @@ import os,base64,copy,datetime,re,json
 from django.core.cache import cache
 import time
 
-apps1=[]
+global apps1
 
 #task-work
 @task()
@@ -79,6 +79,7 @@ periodic_task：程序运行时自动触发周期任务
 def exec_app_check_task():
     now = datetime.datetime.now()
     global apps1
+    print apps1
     if apps1 == None or len(apps1) <= 0:
         execute_task()
     #apps = APPConfig.objects.all()
