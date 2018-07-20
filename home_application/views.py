@@ -27,10 +27,12 @@ import time
 apps1=[]
 
 def setApps():
-   global apps1
-   apps1 = APPConfig.objects.all()
-   #apps1 = apps
-   print apps1
+    if apps1 == None or len(apps1) <= 0:
+        global apps1
+        apps1 = APPConfig.objects.all()
+        print "加载了"
+    #apps1 = apps
+    print apps1
 
 
 def getApps():

@@ -77,8 +77,8 @@ periodic_task：程序运行时自动触发周期任务
 def exec_app_check_task():
     now = datetime.datetime.now()
     #global 
-    setApps.apply_async()
-    apps1 = getApps.apply_async()
+    setApps()
+    apps1 = getApps()
     print apps1
     if apps1 == None or len(apps1) <= 0:
         execute_task()
