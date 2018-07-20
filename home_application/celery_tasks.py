@@ -42,7 +42,7 @@ def async_task_load_app_config():
     now = datetime.datetime.now()
     logger.info(u"async_task_load_app_config 定时任务加载应用配置数据：{}".format(now))
     apps = APPConfig.objects.all()
-    global apps1
+    #global apps1
     apps1 = apps
     #cache.__delattr__("V_CACHE_APPS")
     #cache.__setattr__("V_CACHE_APPS", apps)
