@@ -38,13 +38,7 @@ def async_task_load_app_config():
     """
     now = datetime.datetime.now()
     logger.info(u"async_task_load_app_config 定时任务加载应用配置数据：{}".format(now))
-    global apps1
-    apps1 = APPConfig.objects.all()
-    
-    #apps1 = apps
-    print apps1
-    #cache.__delattr__("V_CACHE_APPS")
-    #cache.__setattr__("V_CACHE_APPS", apps)
+    cache.set("APPConfig", APPConfig.objects.all())
     logger.info(u"async_task_load_app_config 定时任务加载应用配置数据成功：{}".format(now))
 
 
@@ -62,8 +56,7 @@ def execute_task():
     now = datetime.datetime.now()
     logger.info(u"正在通知任务刷新缓存，当前时间：{}".format(now))
     # 调用定时任务
-    #async_task_load_app_config.apply_async()
-    setApps.apply_async()
+    async_task_load_app_config.apply_async()
 
 
 #后台任务-周期执行，判断配置表是否到达check时间
@@ -76,22 +69,15 @@ periodic_task：程序运行时自动触发周期任务
 @periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
 def exec_app_check_task():
     now = datetime.datetime.now()
-    #global 
-    setApps()
-    apps1 = getApps()
-    print apps1
-    if apps1 == None or len(apps1) <= 0:
+    apps=cache.get("APPConfig")
+    print "缓存数据："+apps
+    if apps == None or len(apps) <= 0:
         execute_task()
-    #apps = APPConfig.objects.all()
-    #global apps1
-    #apps1 = apps
-    
-    #apps = cache.__getattr__("V_CACHE_APPS")
-    logger.info(u"加载应用配置缓存数据成功  {}".format(now))
-    if apps1 == None or len(apps1) <= 0:
+        logger.info(u"加载应用配置缓存数据成功  {}".format(now))
+        apps=cache.get("APPConfig")
+    if apps == None or len(apps) <= 0:
         logger.error(u"缓存无数据，从数据库加载数据：{}".format(now))
-        apps1 = APPConfig.objects.all()
-    logger.info(u"开始校验应用配置，当前时间：{}".format(now))
+        apps = APPConfig.objects.all()
     #调用校验方法
     exec_app_check(apps1)
 

@@ -16,29 +16,13 @@ from conf.default import STATICFILES_DIRS
 from home_application.models import Dicts
 from home_application.models import APPConfig
 from home_application.models import APPChange
-#from home_application.celery_tasks import async_task_load_app_config
 from home_application.models import APPChangeRel
 import os,base64,copy,datetime,re,json
 from django.core import serializers
 from common.log import logger
-from django.core.cache import cache
+from django.core.cache import cache, caches
 import time
-
-apps1=[]
-
-def setApps():
-    if apps1 == None or len(apps1) <= 0:
-        global apps1
-        apps1 = APPConfig.objects.all()
-        print "加载了"
-    #apps1 = apps
-    print apps1
-
-
-def getApps():
-   print apps1
-   return apps1
-   
+from django.apps.registry import apps
 
 def index(request):
     """
@@ -456,9 +440,10 @@ def doModifyAPPConfig(request):
     else:
         appCfg.app_status=app_status
     appCfg.save()
+    
+    #apps=cache.get("APPConfig")
+    #cache.set("APPConfig",APPConfig.objects.all())
     load_apps_config_cache()
-    #apps = cache.__getattr__("V_CACHE_APPS")
-    #print apps
     
     return render_json({'code':True, 'text':"数据更新成功"})
 
@@ -479,10 +464,11 @@ def doDelAPPConfig(request):
 
 def load_apps_config_cache():
     # 调用定时任务
-    async_task_load_app_config.apply_async()
+    cache.set("APPConfig", APPConfig.objects.all())
     
 
 def getPagingAPPConfigList(rq):
+    load_apps_config_cache()
     try:
         app_name = rq.GET.get("appName")
         app_ip = rq.GET.get("appIp")
