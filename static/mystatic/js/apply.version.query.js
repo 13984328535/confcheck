@@ -69,7 +69,7 @@ function getInfo(id,name,result){
 						title: name+'  提取结果',
 						maxmin: false,
 						scrollbar: false,
-						area: ['350px', '200px'],
+						area: ['550px', '250px'],
 						content: con
 					});
 		  		}else{
@@ -79,7 +79,7 @@ function getInfo(id,name,result){
 						title: name+'  提取结果',
 						maxmin: false,
 						scrollbar: false,
-						area: ['250px', '150px'],
+						area: ['350px', '200px'],
 						content: con
 					});
 		  		}
