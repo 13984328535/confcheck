@@ -627,9 +627,9 @@ def getPagingAPPChangeByConfirmed(rq):
     if checkTime != "":
         start_time=checkTime.split("~")[0]
         end_time=checkTime.split("~")[1]
-    if changeResult == 0:
+    if changeResult == 1:
         bak_result="成功"
-    else:
+    elif changeResult == 2:
         bak_result="失败"
     obj="" 
     #obj = Q(title__icontains=keyword)|Q(content__icontains=keyword)|Q(author__icontains=keyword)
