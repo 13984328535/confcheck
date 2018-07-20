@@ -16,7 +16,7 @@ from conf.default import STATICFILES_DIRS
 from home_application.models import Dicts
 from home_application.models import APPConfig
 from home_application.models import APPChange
-from home_application.celery_tasks import async_task_load_app_config
+#from home_application.celery_tasks import async_task_load_app_config
 from home_application.models import APPChangeRel
 import os,base64,copy,datetime,re,json
 from django.core import serializers
