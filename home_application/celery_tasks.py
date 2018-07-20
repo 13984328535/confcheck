@@ -23,7 +23,6 @@ from blueking.component.shortcuts import get_client_by_request,get_client_by_use
 from doctest import script_from_examples
 from conf.default import STATICFILES_DIRS
 from home_application.models import Dicts,APPConfig,APPChange,APPChangeRel,APPChangeTask
-from home_application.views import setApps,getApps
 import os,base64,copy,datetime,re,json
 from django.core.cache import cache
 import time
