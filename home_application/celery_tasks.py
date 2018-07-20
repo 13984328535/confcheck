@@ -75,11 +75,13 @@ def exec_app_check_task():
         execute_task()
         logger.info(u"加载应用配置缓存数据成功  {}".format(now))
         apps=cache.get("APPConfig")
+        print "缓存数据:"
+        print apps
     if apps == None or len(apps) <= 0:
         logger.error(u"缓存无数据，从数据库加载数据：{}".format(now))
         apps = APPConfig.objects.all()
     #调用校验方法
-    exec_app_check(apps1)
+    exec_app_check(apps)
 
 def exec_app_check(apps):
     now = datetime.datetime.now()
