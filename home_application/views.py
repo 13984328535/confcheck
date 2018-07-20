@@ -25,6 +25,19 @@ from django.core.cache import cache
 import time
 
 apps1=[]
+
+def setApps():
+   global apps1
+   apps1 = APPConfig.objects.all()
+   #apps1 = apps
+   print apps1
+
+
+def getApps():
+   print apps1
+   return apps1
+   
+
 def index(request):
     """
     首页

@@ -23,7 +23,7 @@ from blueking.component.shortcuts import get_client_by_request,get_client_by_use
 from doctest import script_from_examples
 from conf.default import STATICFILES_DIRS
 from home_application.models import Dicts,APPConfig,APPChange,APPChangeRel,APPChangeTask
-from home_application.views import apps1
+from home_application.views import setApps,getApps
 import os,base64,copy,datetime,re,json
 from django.core.cache import cache
 import time
@@ -62,7 +62,8 @@ def execute_task():
     now = datetime.datetime.now()
     logger.info(u"正在通知任务刷新缓存，当前时间：{}".format(now))
     # 调用定时任务
-    async_task_load_app_config.apply_async()
+    #async_task_load_app_config.apply_async()
+    setApps.apply_async()
 
 
 #后台任务-周期执行，判断配置表是否到达check时间
@@ -75,7 +76,9 @@ periodic_task：程序运行时自动触发周期任务
 @periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
 def exec_app_check_task():
     now = datetime.datetime.now()
-    global apps1
+    #global 
+    setApps.apply_async()
+    apps1 = getApps.apply_async()
     print apps1
     if apps1 == None or len(apps1) <= 0:
         execute_task()
