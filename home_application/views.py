@@ -24,7 +24,7 @@ from common.log import logger
 from django.core.cache import cache
 import time
 
-
+apps1=[]
 def index(request):
     """
     首页

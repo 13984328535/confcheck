@@ -22,16 +22,13 @@ from common.log import logger
 from blueking.component.shortcuts import get_client_by_request,get_client_by_user
 from doctest import script_from_examples
 from conf.default import STATICFILES_DIRS
-from home_application.models import Dicts
-from home_application.models import APPConfig
-from home_application.models import APPChange
-from home_application.models import APPChangeRel
-from home_application.models import APPChangeTask
+from home_application.models import Dicts,APPConfig,APPChange,APPChangeRel,APPChangeTask
+from home_application.views import apps1
 import os,base64,copy,datetime,re,json
 from django.core.cache import cache
 import time
 
-apps1=[]
+
 
 #task-work
 @task()
