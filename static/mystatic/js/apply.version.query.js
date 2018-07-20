@@ -61,9 +61,9 @@ function getInfo(id,name,result){
 					layer.msg(returnData.text,{icon: 2,time: 6000});
 				}*/
 				if(returnData.code){
-		  			var con="<div style='font-size:14px;margin-left:15px;margin-top:8px;word-wrap:break-word;'><b>"+returnData.text+"</b></div>"+
+		  			var con="<div style='font-size:14px;margin-left:15px;margin-top:8px;word-break:break-all;'><b>"+returnData.text+"</b></div>"+
 			  		"<div style='font-size:14px;margin-left:15px;margin-top:8px;'><b>IP:<span style='color:red'>"+returnData.IP+"</span></b></div>"+
-			  		"<div style='font-size:14px;margin-left:15px;margin-top:8px;word-wrap:break-word;'><b>路径:<span style='color:red'>"+returnData.path+"</span></b></div>";
+			  		"<div style='font-size:14px;margin-left:15px;margin-top:8px;word-break:break-all;'><b>路径:<span style='color:red'>"+returnData.path+"</span></b></div>";
 					var index = parent.layer.open({
 						type: 1,
 						title: name+'  提取结果',
@@ -74,7 +74,7 @@ function getInfo(id,name,result){
 						content: con
 					});
 		  		}else{
-		  			var con="<div style='font-size:14px;margin-left:15px;margin-top:8px;word-wrap:break-word;'><b>"+returnData.text+"</b></div>";
+		  			var con="<div style='font-size:14px;margin-left:15px;margin-top:8px;word-break:break-all;'><b>"+returnData.text+"</b></div>";
 					var index = parent.layer.open({
 						type: 1,
 						title: name+'  提取结果',
