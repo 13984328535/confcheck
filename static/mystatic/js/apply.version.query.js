@@ -61,9 +61,12 @@ function getInfo(id,name,result){
 					layer.msg(returnData.text,{icon: 2,time: 6000});
 				}*/
 				if(returnData.code){
-		  			var con="<div style='font-size:14px;margin-left:15px;margin-top:8px;word-break:break-all;'><b>"+returnData.text+"</b></div>"+
+					var con="<div style='font-size:14px;margin-left:15px;margin-top:8px;word-break:break-all;'><b>"+returnData.text+"</b></div>"+
 			  		"<div style='font-size:14px;margin-left:15px;margin-top:8px;'><b>IP:<span style='color:red'>"+returnData.IP+"</span></b></div>"+
-			  		"<div style='font-size:14px;margin-left:15px;margin-top:8px;word-break:break-all;'><b>路径:<span style='color:red'>"+returnData.path+"</span></b></div>";
+			  		"<div style='font-size:14px;margin-left:15px;margin-top:8px;word-break:break-all;'><b>路径:<span style='color:red'>"+returnData.path+"</span></b></div>"+
+			  		"<div style='margin-top:5px;' align='center'><input type='button' style='text-decoration:none;background:#1D689C;color:#f2f2f2;padding: 5px 5px 5px 5px;font-size:13px;"+
+			  		"font-family: 微软雅黑,宋体,Arial,Helvetica,Verdana,sans-serif;font-weight:bold;border-radius:3px;-webkit-transition:all linear 0.30s;"+
+			  		"moz-transition:all linear 0.30s;transition:all linear 0.30s;' value='复制路径' onclick='copyPath(\""+returnData.path+"\");'></div>";
 					var index = parent.layer.open({
 						type: 1,
 						title: name+'  提取结果',

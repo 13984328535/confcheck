@@ -89,3 +89,14 @@ function selectBusy(obj){
 	}
 	$("#busy_select").trigger("click");
 }
+
+function copyPath(obj){
+    var oInput = document.createElement('input');
+    oInput.value = obj;
+    document.body.appendChild(oInput);
+    oInput.select(); // 选择对象
+    document.execCommand("Copy"); // 执行浏览器复制命令
+    oInput.className = 'oInput';
+    oInput.style.display='none';
+	layer.msg("已复制到剪切板!");
+}

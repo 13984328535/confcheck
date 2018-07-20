@@ -16,6 +16,7 @@ from conf.default import STATICFILES_DIRS
 from home_application.models import Dicts
 from home_application.models import APPConfig
 from home_application.models import APPChange
+from home_application.celery_tasks import async_task_load_app_config
 from home_application.models import APPChangeRel
 import os,base64,copy,datetime,re,json
 from django.core import serializers
@@ -122,6 +123,9 @@ def doDelAppTypeDict(request):
     ret_text = "删除成功"
     ret_code = True   
     try: 
+        apps = APPConfig.objects.filter(app_type=id)
+        if apps != None and len(apps) > 0:
+            return render_json({'code':ret_code, 'text':"类型下已有应用配置，不能删除"})
         Dicts.objects.filter(id=id).delete()             
     except:
         ret_code = False
@@ -227,12 +231,38 @@ def getUserIps(request):
                                 record["host_ip"] = copy.deepcopy(InnerIP)
                                 record["source"] = copy.deepcopy(Source)                          
                                 records.append(copy.deepcopy(record))
+            records=removeObj(records)
     except:
         ret_code = False
         ret_text = "获取用户业务主机异常"
         
     return render_json({'code':ret_code, 'text':ret_text,'list':records})
 
+
+def removeObj(records):
+    objs=[]
+    for obj in records:
+       if isExsit(objs,obj) == False:
+           objs.append(obj)
+    return objs
+
+
+def isExsit(objs,host):
+    ret = False
+    try:
+        if objs != None and len(objs) > 0:
+            for obj in objs:
+                if obj["host_ip"] == host["host_ip"]:
+                    ret = True
+                else:
+                    ret = False
+        else:
+            ret = False
+    except Exception, e:
+        print 'str(Exception):\t', str(Exception)
+        print 'repr(e):\t', repr(e)
+        ret = False
+    return ret
 
 def get_user_ips(request):
     username = request.user.username  
@@ -412,8 +442,8 @@ def doModifyAPPConfig(request):
         appCfg.app_status=app_status
     appCfg.save()
     load_apps_config_cache()
-    apps = cache.__getattr__("V_CACHE_APPS")
-    print apps
+    #apps = cache.__getattr__("V_CACHE_APPS")
+    #print apps
     
     return render_json({'code':True, 'text':"数据更新成功"})
 
@@ -433,9 +463,8 @@ def doDelAPPConfig(request):
 
 
 def load_apps_config_cache():
-    apps = APPConfig.objects.all()
-    #cache.__delattr__("V_CACHE_APPS")
-    cache.__setattr__("V_CACHE_APPS", apps)
+    # 调用定时任务
+    async_task_load_app_config.apply_async()
     
 
 def getPagingAPPConfigList(rq):
@@ -904,8 +933,14 @@ def recover_his_version(rq):
     id = rq.GET.get("id")
     if id == None or id == "":
         return render_json({'code':False, 'text':"ID不能为空"})
-    chg = APPChange.objects.get(id=id)
-    app = APPConfig.objects.get(id=chg.app_id)
+    try:
+        chg = APPChange.objects.get(id=id)
+    except:
+        return render_json({'code':False, 'text':"变更数据不存在"})  
+    try:  
+        app = APPConfig.objects.get(id=chg.app_id)
+    except:
+        return render_json({'code':False, 'text':"变更数据所属应用不存在"})  
     biz_ips = {}
     biz_ips["ip"] = app.app_host_ip
     biz_ips["source"] = app.host_source
