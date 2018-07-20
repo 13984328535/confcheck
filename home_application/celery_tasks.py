@@ -69,7 +69,8 @@ periodic_task：程序运行时自动触发周期任务
 def exec_app_check_task():
     now = datetime.datetime.now()
     apps=cache.get("APPConfig")
-    print "缓存数据："+apps
+    print "缓存数据:"
+    print apps
     if apps == None or len(apps) <= 0:
         execute_task()
         logger.info(u"加载应用配置缓存数据成功  {}".format(now))
