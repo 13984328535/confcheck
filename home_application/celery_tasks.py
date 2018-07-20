@@ -31,7 +31,7 @@ import os,base64,copy,datetime,re,json
 from django.core.cache import cache
 import time
 
-global apps1
+apps1=[]
 
 #task-work
 @task()
